@@ -23,6 +23,34 @@ class RealtorGateway:
             "GET", url, data=payload, headers=headers, params=params)
         return response.text
 
+    def get_property_id_by_mls(self, mls_id) -> str:
+        url = "https://realtor.p.rapidapi.com/properties/v2/list-by-mls"
+        payload = "{}"
+        headers = {
+            'x-rapidapi-key': self.API_KEY
+
+        }
+        params = {
+            'mls_id': mls_id
+        }
+        response = requests.request(
+            "GET", url, data=payload, headers=headers, params=params)
+        return ["properties"][0]["property_id"]
+
+    def get_property_id_by_address(self, address) -> str:
+        url = "https://realtor.p.rapidapi.com/locations/auto-complete"
+
+        querystring = {"input":address}
+
+        headers = {
+            'x-rapidapi-key': self.API_KEY,
+            'x-rapidapi-host': "realtor.p.rapidapi.com"
+            }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        return response["autocomplete"][0]["mpr_id"]
+
+
 # myclass = RealtorGateway()
-# details = json.loads(myclass.show_details("O3599084026"))
-# print(details["properties"][0]["tax_history"])
+# response = json.loads(myclass.get_property_id_by_address("7434 keen"))
+# print(response["autocomplete"][0]["mpr_id"])
