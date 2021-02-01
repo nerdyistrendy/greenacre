@@ -3,7 +3,7 @@ import json
 
 
 class RealtorGateway:
-    API_KEY = "1e0374fe84msh9be3635d1737180p1d6873jsne8177006ede3"
+    API_KEY = "e6a6cc616cmsh356cb445305c5aap10de3fjsn2152bcb8d556"
 
     def show_details(self, property_id) -> str:
         url = "https://realtor.p.rapidapi.com/properties/v2/detail?="
