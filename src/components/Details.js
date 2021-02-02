@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Details = (props) => {
   return (
-    <div>details</div>
+    <div>{props.currentProperty? props.currentProperty : "none"}</div>
   )
 }
 

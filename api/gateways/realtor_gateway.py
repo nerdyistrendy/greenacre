@@ -13,21 +13,22 @@ class RealtorGateway:
         url = "https://realtor.p.rapidapi.com/properties/v2/detail?="
         payload = "{}"
         headers = {
-            'x-rapidapi-key': self.API_KEY
-
+            'x-rapidapi-key': self.API_KEY,
+            "Access-Control-Allow-Origin": "*"
         }
         params = {
             'property_id': property_id
         }
         response = requests.request(
             "GET", url, data=payload, headers=headers, params=params)
-        return response.text
+        return (response.content, response.status_code, response.headers.items())
 
     def get_property_id_by_mls(self, mls_id) -> str:
         url = "https://realtor.p.rapidapi.com/properties/v2/list-by-mls"
         payload = "{}"
         headers = {
-            'x-rapidapi-key': self.API_KEY
+            'x-rapidapi-key': self.API_KEY,
+            "Access-Control-Allow-Origin": "*"
 
         }
         params = {
@@ -44,7 +45,8 @@ class RealtorGateway:
 
         headers = {
             'x-rapidapi-key': self.API_KEY,
-            'x-rapidapi-host': "realtor.p.rapidapi.com"
+            'x-rapidapi-host': "realtor.p.rapidapi.com",
+            "Access-Control-Allow-Origin": "*"
             }
 
         response = requests.request("GET", url, headers=headers, params=querystring)

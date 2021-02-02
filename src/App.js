@@ -12,17 +12,18 @@ import Details from './components/Details'
 
 import './App.css';
 
-const API_URL_BASE = 'http://localhost:3000/'
+const API_URL_BASE = 'http://127.0.0.1:5000/'
 
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentProperty, setCurrentProperty] = useState(null);
 
-  const searchProperty = (property_id) => {
+  const searchPropertyByAddress = (property_id) => {
     axios.get(`${API_URL_BASE}details/${property_id}`)
     .then((response) => {
       const results = response.data;
+      console.log(response.data);
       setCurrentProperty(results);
     })
     .catch((error) => {
@@ -51,11 +52,12 @@ const App = () => {
           <section>
             <Switch>
               <Route path='/search'>
-                <Search 
+                <Search searchPropertyByAddress={searchPropertyByAddress}
                 />
               </Route>
               <Route path='/details'>
-                <Details                   
+                <Details currentProperty={currentProperty}
+                   
                 />
               </Route>
               <Route path='/'>
