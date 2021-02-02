@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const Details = (props) => {
   return (
-    <div>{props.currentProperty? props.currentProperty : "none"}</div>
+    <div>{props.currentProperty ? props.currentProperty.properties[0].description: ""}</div>
   )
 }
 

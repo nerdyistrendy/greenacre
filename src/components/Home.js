@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const Home = (props) => {
   return (
-    <div>Are you an investor or a renter?</div>
+    <div>investor or a renter?</div>
   )
 }
 

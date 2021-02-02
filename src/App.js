@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import Home from './components/Home'
 import Search from './components/Search'
-import Details from './components/Details'
+import List from './components/List'
 
 import './App.css';
 
@@ -23,8 +23,8 @@ const App = () => {
     axios.get(`${API_URL_BASE}details/${property_id}`)
     .then((response) => {
       const results = response.data;
-      console.log(response.data);
       setCurrentProperty(results);
+
     })
     .catch((error) => {
       setErrorMessage(error.message);
@@ -43,7 +43,7 @@ const App = () => {
               <Link to='/search'>Search</Link>
             </li>
             <li>
-              <Link to='/details'>Details</Link>
+              <Link to='/list'>My List</Link>
             </li>
           </ul>
         </nav>
@@ -53,11 +53,11 @@ const App = () => {
             <Switch>
               <Route path='/search'>
                 <Search searchPropertyByAddress={searchPropertyByAddress}
+                        currentProperty={currentProperty} 
                 />
               </Route>
-              <Route path='/details'>
-                <Details currentProperty={currentProperty}
-                   
+              <Route path='/list'>
+                <List
                 />
               </Route>
               <Route path='/'>

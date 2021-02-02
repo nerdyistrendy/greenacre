@@ -36,7 +36,8 @@ const Search = (props) => {
         type="submit"
         name="Submit"
       />
-      
+      <Details currentProperty={props.currentProperty} />
+
     </form>
      </div>
   )

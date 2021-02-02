@@ -11,11 +11,6 @@ def hello():
     return "Hello World!"
 
 
-@app.route("/name/<name>")
-def get_book_name(name):
-    return "name : {}".format(name)
-
-
 @app.route("/details/<property_id>")
 def get_property_details(property_id):
     property_details_json = realtor_GW.show_details(property_id)
