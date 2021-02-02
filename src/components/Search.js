@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Details from './Details';
+import AutoComplete from './AutoComplete';
 
 const Search = (props) => {
   const [formFields, setFormFields] = useState({
@@ -37,9 +38,10 @@ const Search = (props) => {
         name="Submit"
       />
       <Details currentProperty={props.currentProperty} />
+      {/* <Autocomplete currentProperty={props.currentProperty} /> */}
 
-    </form>
-     </div>
+      </form>
+    </div>
   )
 }
 
