@@ -11,15 +11,15 @@ const Search = (props) => {
     setFormFields({searchTerm: event.target.value});
     };
 
-  const onFormSubmit = (event) => {
-    event.preventDefault();
-
-    props.searchPropertyByAddress(formFields.searchTerm);
-
-    setFormFields({
-      searchTerm: '',
-    });
-  };
+    const onFormSubmit = (event) => {
+      event.preventDefault();
+  
+      props.searchPropertyById(formFields.searchTerm);
+  
+      setFormFields({
+        searchTerm: '',
+      });
+    };
 
   return (
     <div>

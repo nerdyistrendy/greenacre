@@ -38,21 +38,22 @@ class RealtorGateway:
             "GET", url, data=payload, headers=headers, params=params)
         return ["properties"][0]["property_id"]
 
-    # def get_property_id_by_address(self, address) -> str:
-    #     url = "https://realtor.p.rapidapi.com/locations/auto-complete"
+    def get_property_id_by_address(self, address) -> str:
+        url = "https://realtor.p.rapidapi.com/locations/auto-complete"
+        payload = "{}"
+        headers = {         
+            'x-rapidapi-key': self.API_KEY,
+            # 'x-rapidapi-host': "realtor.p.rapidapi.com",
+            'Access-Control-Allow-Origin': '*'
+            }
+        params = {
+            "input":address
+        }
 
-    #     querystring = {"input":address}
+        response = requests.request(
+            "GET", url, data=payload, headers=headers, params=params)
+        return (response.text)
 
-    #     headers = {
-    #         'x-rapidapi-key': self.API_KEY,
-    #         'x-rapidapi-host': "realtor.p.rapidapi.com",
-    #         "Access-Control-Allow-Origin": "*"
-    #         }
-
-    #     response = requests.request("GET", url, headers=headers, params=querystring)
-    #     return (response["autocomplete"][0]["mpr_id"], response.status_code, response.headers.items())
-
-
-# myclass = RealtorGateway()
-# response = json.loads(myclass.get_property_id_by_address("7434 keen"))
-# print(response["autocomplete"][0]["mpr_id"])
+myclass = RealtorGateway()
+response = json.loads(myclass.get_property_id_by_address("7434 keen"))
+print(response)

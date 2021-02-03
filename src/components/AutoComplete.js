@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PlacesAutocomplete from 'react-places-autocomplete';
+import Details from './Details';
 
 import './AutoComplete.css'; 
 export class AutoComplete extends Component {
@@ -11,6 +12,15 @@ export class AutoComplete extends Component {
   handleChange = address => {
     this.setState({ address });
   };
+
+  onFormSubmit = (event) => {
+    event.preventDefault();
+    this.props.getPropertyId(this.state.address)
+    this.props.searchPropertyById(this.props.currentPropertyId);
+
+    // this.setState({ address: '' });
+  };
+
  
   render() {
     return (
@@ -21,12 +31,17 @@ export class AutoComplete extends Component {
       onSelect={this.handleSelect}
     >
       {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-        <div>
+        <form onSubmit={this.onFormSubmit}>
           <input
             {...getInputProps({
               placeholder: 'Enter Address',
               className: 'location-search-input',
             })}
+            
+          />
+          <input 
+            type="submit"
+            name="Submit"
           />
           <div className="autocomplete-dropdown-container">
             {loading && <div>Loading...</div>}
@@ -48,12 +63,15 @@ export class AutoComplete extends Component {
               );
             })}
           </div>
-        </div>
+          {/* <Search currentProperty={this.props.currentProperty} /> */}
+
+        </form>
       )}
     </PlacesAutocomplete>
+
       </div>
     );
   };
 }
 
-export default AutoComplete
+export default AutoComplete;
