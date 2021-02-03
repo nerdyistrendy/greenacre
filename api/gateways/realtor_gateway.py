@@ -43,7 +43,6 @@ class RealtorGateway:
         payload = "{}"
         headers = {         
             'x-rapidapi-key': self.API_KEY,
-            # 'x-rapidapi-host': "realtor.p.rapidapi.com",
             'Access-Control-Allow-Origin': '*'
             }
         params = {
@@ -54,6 +53,6 @@ class RealtorGateway:
             "GET", url, data=payload, headers=headers, params=params)
         return (response.text)
 
-myclass = RealtorGateway()
-response = json.loads(myclass.get_property_id_by_address("7434 keen"))
-print(response)
+# myclass = RealtorGateway()
+# response = json.loads(myclass.get_property_id_by_address("7434 keen"))
+# print(response)
