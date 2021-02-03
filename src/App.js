@@ -24,28 +24,30 @@ const App = () => {
 
   const getPropertyId = (address) => {
     
+    
+    
+  }
+  const searchPropertyById = (address) => {
+
     axios.get(`${API_URL_BASE}id/${address}`)
     .then((response) => {
       const results = response.data["autocomplete"][0]["mpr_id"];
       setCurrentPropertyId(results);
       console.log(results)
+      return results
     })
-    .catch((error) => {
-      setErrorMessage(error.message);
-    });
-  }
-  const searchPropertyById = (property_id) => {
-    axios.get(`${API_URL_BASE}details/${property_id}`)
     .then((response) => {
-      const results = response.data;
-      setCurrentProperty(results);
-      console.log(property_id)
-      console.log(results)
-    })
+      axios.get(`${API_URL_BASE}details/${response}`)
+      .then((response) => {
+        const results = response.data;
+        setCurrentProperty(results);
+        console.log(results)
+    })})
     .catch((error) => {
       setErrorMessage(error.message);
     });
   };
+    
 
   return (
     <Router>

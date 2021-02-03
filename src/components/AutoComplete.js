@@ -15,8 +15,8 @@ export class AutoComplete extends Component {
 
   onFormSubmit = (event) => {
     event.preventDefault();
-    this.props.getPropertyId(this.state.address)
-    this.props.searchPropertyById(this.props.currentPropertyId);
+    // this.props.getPropertyId(this.state.address)
+    this.props.searchPropertyById(this.state.address);
 
     // this.setState({ address: '' });
   };
