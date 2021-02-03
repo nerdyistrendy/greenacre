@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from gateways.realtor_gateway import RealtorGateway
 from flask_cors import CORS, cross_origin
 app = Flask(__name__)
