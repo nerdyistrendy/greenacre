@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, url_for, redirect
 from gateways.realtor_gateway import RealtorGateway
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
@@ -91,6 +91,17 @@ def get_property_id(address):
     property_details_json = realtor_GW.get_property_id_by_address(address)
 
     return property_details_json;
+
+@app.route('/addinvestor', methods=['GET', 'POST'])
+def add_investor():
+    
+    new_investor = Investor(name)
+    db.session.add(new_investor)
+    db.session.commit()
+
+    return {new_investor.name}
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
