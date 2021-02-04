@@ -109,6 +109,8 @@ def add_investor():
     db.session.commit()
 
     return {new_investor.name}
+
+# authentication
 app.config['GOOGLE_CLIENT_ID'] = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
 app.secret_key = 'SECRET_KEY'
 
@@ -173,26 +175,6 @@ user_manager = UserManager()
 @login.user_loader
 def user_loader(user_id):
     return user_manager.lookup_user(user_id)
-
-
-# Decorator to add CSRF protection to any mutating function.
-#
-# Adding this header to the client forces the browser to first do an OPTIONS
-# call, determine that the origin is not allowed, and block the subsequent
-# call. (Ordinarily, the call is made but the result not made available to
-# the client if the origin is not allowed, but the damage is already done.)
-# Checking for the presence of this header on the server side prevents
-# clients from bypassing this check.
-#
-# Add this decorator to all mutating operations.
-# def csrf_protection(fn):
-#     """Require that the X-Requested-With header is present."""
-#     def protected(*args):
-#         if 'X-Requested-With' in request.headers:
-#             return fn(*args)
-#         else:
-#             return "X-Requested-With header missing", HTTPStatus.FORBIDDEN
-#     return protected
 
 
 @api.route("/me")
