@@ -1,2 +1,3 @@
 FLASK_APP=api.py
 FLASK_ENV=development
+GOOGLE_CLIENT_ID=682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com
