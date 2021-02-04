@@ -3,11 +3,16 @@ from gateways.realtor_gateway import RealtorGateway
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+# from marshmallow from Marshmallow
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/greenacre"
+# "postgresql:///greenacre"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+# ma = Marshmallow(app)
 realtor_GW = RealtorGateway()
 cors = CORS(app)
 
@@ -26,6 +31,11 @@ class Investor(db.Model):
 
     def __repr__(self):
         return f"<Investor {self.username}>"
+    
+    def report_lists(self):
+        print("investment lists:")
+        for list in self.investment_lists:
+            print(list.list_name)
 
 #many to many
 association_table = db.Table('association', 
@@ -41,8 +51,7 @@ class InvestmentList(db.Model):
     investor_id = db.Column(db.Integer,db.ForeignKey('investors.id'))
     investment_properties = db.relationship("InvestmentProperty",
                     secondary=association_table,
-                    lazy='dynamic',
-                    backref="investment_lists")
+                    backref=db.backref("investment_lists" ,lazy='dynamic'))
 
     def __init__(self, list_name, investor_id):
         self.list_name = list_name
@@ -65,6 +74,7 @@ class InvestmentProperty(db.Model):
 
     def __repr__(self):
         return f"<Investment Property {self.address}>"
+
 
 @app.route("/")
 def hello():
