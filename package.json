@@ -61,6 +61,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
     "@types/googlemaps": "^3.43.2"
   },
   "react-dotenv": {
