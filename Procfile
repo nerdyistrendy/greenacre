@@ -1,1 +1,1 @@
-web: flask runpip install psycopg2-binary
+web: flask run
