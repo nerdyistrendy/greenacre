@@ -8,7 +8,6 @@ import {
   Link
 } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import {Sidebar, InputItem, DropdownItem, Icon, Item, Logo, LogoText} from 'react-sidebar-ui'
 /* Material UI imports */
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -17,10 +16,7 @@ import {
   Toolbar,
   Typography,
   IconButton,
-  Drawer,
-  MenuList,
   MenuItem,
-  ListItemText,
   Snackbar,
   Button,
   Menu,
@@ -164,28 +160,6 @@ const App = () => {
                 />
         </Toolbar>
         <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-        {/* <Sidebar bgColor='black' isCollapsed={false}>        
-      <ul>
-            <li>
-              
-            </li>
-            <li>
-              
-            </li>
-            <li>
-              
-            </li>
-            <li>
-              
-            </li>
-            <li>
-              <Link to='/AutoComplete'>AutoComplete</Link>
-            </li>
-            <li>
-              <Link to='/Details'>Details</Link>
-            </li>
-          </ul>
-      </Sidebar> */}
       <Button aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}>
         Menu
       </Button>

@@ -267,15 +267,31 @@ def get_property_id(address):
 
     return property_details_json
 
+@app.route("/<id>/<list_name>", methods=['POST', 'GET'])
+def handle_list():
+    if request.method == 'GET':
+        properties = InvestmentProperty.query.all()
+        results = [
+            {
+                "address": property.name,
+                "price": property.model,
+            } for property in properties]
 
-# @app.route('/addinvestor', methods=['GET', 'POST'])
-# def add_investor():
+        return {results}
+    elif request.method == 'POST':
+        if request.is_json:
+            data = request.get_json()
+            new_property = InvestmentProperty(address=data['name'], price=data['model'], doors=data['doors'])
+            db.session.add(new_car)
+            db.session.commit()
+            return {"message": f"car {new_car.name} has been created successfully."}
+        else:
+            return {"error": "The request payload is not in JSON format"}
 
-#     new_investor = Investor(name)
-#     db.session.add(new_investor)
-#     db.session.commit()
 
-#     return {new_investor.name}
+    
+
+
 
 
 if __name__ == '__main__':
