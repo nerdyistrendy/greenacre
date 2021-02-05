@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Details from './Details';
 import AutoComplete from './AutoComplete';
+import "./styles.scss";
 
 const Search = (props) => {
   const [formFields, setFormFields] = useState({
@@ -37,7 +38,7 @@ const Search = (props) => {
         type="submit"
         name="Submit"
       />
-      <Details currentProperty={props.currentProperty} />
+      <Details className='container' currentProperty={props.currentProperty} />
       {/* <Autocomplete currentProperty={props.currentProperty} /> */}
 
       </form>

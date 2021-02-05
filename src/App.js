@@ -43,23 +43,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      light: '#9effff',
-      main: '#64ffda',
-      dark: '#14cba8',
-      contrastText: '#fff',
-    },
-    secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
-    },
-  },
-})
-
 const ProtectedRoute = ({children, authRequired, ...rest}) => {
   return (
       <Route {...rest}>

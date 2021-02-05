@@ -3,7 +3,7 @@ import PlacesAutocomplete from "react-places-autocomplete";
 import Details from "./Details";
 import "./styles.scss";
 
-import "./AutoComplete.css";
+import "./AutoComplete.scss";
 export class AutoComplete extends Component {
   constructor(props) {
     super(props);
@@ -24,7 +24,7 @@ export class AutoComplete extends Component {
 
   render() {
     return (
-      <div className="canvas">
+      <div>
         <PlacesAutocomplete
           value={this.state.address}
           onChange={this.handleChange}
@@ -69,7 +69,7 @@ export class AutoComplete extends Component {
             </form>
           )}
         </PlacesAutocomplete>
-        <Details
+        <Details 
           currentProperty={this.props.currentProperty}
           address={this.state.address}
         />
