@@ -138,15 +138,15 @@ class UserManager(object):
     """
 
     def __init__(self):
-        investers_in_db = Investor.query.all()
-        known_users_sub_ids = [invester.id for invester in investers_in_db]
+        investors_in_db = Investor.query.all()
+        known_users_sub_ids = [investor.id for investor in investors_in_db]
         self.known_users = {}
         app.logger.info(known_users_sub_ids)
-        for invester in investers_in_db:
-            self.known_users[invester.id] = invester
+        for investor in investors_in_db:
+            self.known_users[investor.id] = investor
 
     def add_or_update_google_user(self, google_subscriber_id, name,
-                                  profile_pic):
+                                profile_pic):
         """Add or update user profile info."""
         if google_subscriber_id in self.known_users:
             app.logger.info("user alreayd in database")
@@ -155,8 +155,9 @@ class UserManager(object):
             app.logger.info("user not in database")
             self.known_users[google_subscriber_id] = \
                 Investor(ident=google_subscriber_id,
-                         name=name, profile_pic=profile_pic)
-            db.session.add(self.known_users[google_subscriber_id])
+                        name=name, profile_pic=profile_pic)
+            favorite = InvestmentList("favorite", google_subscriber_id)
+            db.session.add_all([self.known_users[google_subscriber_id], favorite])
             db.session.commit()
         return self.known_users[google_subscriber_id]
 
