@@ -10,6 +10,7 @@ from flask_login import current_user
 from http import HTTPStatus
 import google_token
 
+import logging
 # from marshmallow from Marshmallow
 
 app = Flask(__name__)
@@ -17,13 +18,30 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhos
 # "postgresql:///greenacre"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 client_id = '707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com'
-
+app.logger.info("test logger")
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 # ma = Marshmallow(app)
 realtor_GW = RealtorGateway()
 cors = CORS(app)
+
+# authentication
+app.config['GOOGLE_CLIENT_ID'] = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
+app.secret_key = 'SECRET_KEY'
+
+try:
+    app.config['REMEMBER_COOKIE_HTTPONLY'] = True
+except RuntimeError:
+    pass
+login = LoginManager()
+login.init_app(app)
+login.session_protection = 'strong'
+
+api = Api(app=app, title="Greenacre Hub",
+          description="Simple app to find your dream property")
+
+# app.secret_key = app.config['SECRET_KEY']
 
 
 class Investor(db.Model):
@@ -32,35 +50,40 @@ class Investor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.Text)
 
-    #one-to-many
-    investment_lists = db.relationship('InvestmentList',backref='investor',lazy='dynamic')
+    # one-to-many
+    investment_lists = db.relationship(
+        'InvestmentList', backref='investor', lazy='dynamic')
 
     def __init__(self, username):
         self.username = username
 
     def __repr__(self):
         return f"<Investor {self.username}>"
-    
+
     def report_lists(self):
         print("investment lists:")
         for list in self.investment_lists:
             print(list.list_name)
 
-#many to many
-association_table = db.Table('association', 
-    db.Column('investment_lists_id', db.Integer, db.ForeignKey('investment_lists.id'), primary_key=True),
-    db.Column('investment_properties_id', db.Integer, db.ForeignKey('investment_properties.id'), primary_key=True)
-)
+
+# many to many
+association_table = db.Table('association',
+                             db.Column('investment_lists_id', db.Integer, db.ForeignKey(
+                                 'investment_lists.id'), primary_key=True),
+                             db.Column('investment_properties_id', db.Integer, db.ForeignKey(
+                                 'investment_properties.id'), primary_key=True)
+                             )
+
 
 class InvestmentList(db.Model):
     __tablename__ = 'investment_lists'
 
     id = db.Column(db.Integer, primary_key=True)
     list_name = db.Column(db.Text)
-    investor_id = db.Column(db.Integer,db.ForeignKey('investors.id'))
+    investor_id = db.Column(db.Integer, db.ForeignKey('investors.id'))
     investment_properties = db.relationship("InvestmentProperty",
-                    secondary=association_table,
-                    backref=db.backref("investment_lists" ,lazy='dynamic'))
+                                            secondary=association_table,
+                                            backref=db.backref("investment_lists", lazy='dynamic'))
 
     def __init__(self, list_name, investor_id):
         self.list_name = list_name
@@ -68,7 +91,8 @@ class InvestmentList(db.Model):
 
     def __repr__(self):
         return f"<Investment List {self.list_name}>"
- 
+
+
 class InvestmentProperty(db.Model):
     __tablename__ = 'investment_properties'
 
@@ -85,51 +109,9 @@ class InvestmentProperty(db.Model):
         return f"<Investment Property {self.address}>"
 
 
-@app.route("/")
-def hello():
-    return "Hello World!"
-
-@app.route("/details/<property_id>")
-def get_property_details(property_id):
-    property_details_json = realtor_GW.show_details(property_id)
-
-    return property_details_json;
-
-@app.route("/id/<address>")
-def get_property_id(address):
-    property_details_json = realtor_GW.get_property_id_by_address(address)
-
-    return property_details_json;
-
-@app.route('/addinvestor', methods=['GET', 'POST'])
-def add_investor():
-    
-    new_investor = Investor(name)
-    db.session.add(new_investor)
-    db.session.commit()
-
-    return {new_investor.name}
-
-# authentication
-app.config['GOOGLE_CLIENT_ID'] = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
-app.secret_key = 'SECRET_KEY'
-
-try:
-    app.config['REMEMBER_COOKIE_HTTPONLY'] = True
-except RuntimeError:
-    pass
-login = LoginManager()
-login.init_app(app)
-login.session_protection = 'strong'
-
-api = Api(app=app, title="The Hello App",
-          description="Simple app to demonstrate login/logout with Google")
-
-app.secret_key = app.config['SECRET_KEY']
-
-
 class User(UserMixin):
     """Simple User class that stores ID, name, and profile image."""
+
     def __init__(self, ident, name, profile_pic):
         self.id = ident
         self.name = name
@@ -172,6 +154,8 @@ user_manager = UserManager()
 # The user loader looks up a user by their user ID, and is called by
 # flask-login to get the current user from the session.  Return None
 # if the user ID isn't valid.
+
+
 @login.user_loader
 def user_loader(user_id):
     return user_manager.lookup_user(user_id)
@@ -233,7 +217,7 @@ class Me(Resource):
         # (such as only allow known users, or somehow mark a user as new so
         # your frontend can collect extra profile information).
         user = user_manager.add_or_update_google_user(
-                identity['sub'], identity['name'], identity['picture'])
+            identity['sub'], identity['name'], identity['picture'])
 
         # Authorize the user:
         login_user(user, remember=True)
@@ -246,6 +230,36 @@ class Me(Resource):
     def delete(self):
         logout_user()
         return "", HTTPStatus.NO_CONTENT
+
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+
+@app.route("/details/<property_id>")
+def get_property_details(property_id):
+    property_details_json = realtor_GW.show_details(property_id)
+
+    return property_details_json
+
+
+@app.route("/id/<address>")
+def get_property_id(address):
+    property_details_json = realtor_GW.get_property_id_by_address(address)
+
+    return property_details_json
+
+
+@app.route('/addinvestor', methods=['GET', 'POST'])
+def add_investor():
+
+    new_investor = Investor(name)
+    db.session.add(new_investor)
+    db.session.commit()
+
+    return {new_investor.name}
+
 
 if __name__ == '__main__':
     app.run(debug=True)
