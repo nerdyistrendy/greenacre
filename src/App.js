@@ -8,15 +8,26 @@ import {
   Link
 } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import {Sidebar, InputItem, DropdownItem, Icon, Item, Logo, LogoText} from 'react-sidebar-ui'
 /* Material UI imports */
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography';
-import Snackbar from '@material-ui/core/Snackbar';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {
+  CssBaseline,
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Drawer,
+  MenuList,
+  MenuItem,
+  ListItemText,
+  Snackbar,
+  Button,
+  Menu,
+  Fade
+ } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 import Alert from '@material-ui/lab/Alert';
-import lightGreen from '@material-ui/core/colors/red';
 import { ProfileButton } from "./components/ProfileButton";
 import { Login } from './components/Login';
 import { Hello } from './components/Hello';
@@ -41,7 +52,10 @@ const useStyles = makeStyles(theme => ({
   title: {
       flexGrow: 1,
   }
+  
 }));
+
+
 
 const ProtectedRoute = ({children, authRequired, ...rest}) => {
   return (
@@ -60,7 +74,16 @@ const App = () => {
   const [authRequired, setAuthRequired] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
   const [logoutError, showLogoutError] = useState(false);
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   /* For logout  */
   function handleLogout() {
       async function do_logout() {
@@ -122,7 +145,14 @@ const App = () => {
   return (
     <div>
        <CssBaseline />
+
+
+
+      <Router>
+      <div>
       <AppBar position="static" style={{ background: '#8bc34a' }}>
+
+      
         <Toolbar>
             <Typography color="inherit" variant="h6" className={classes.title}>
                 Greenacre Hub
@@ -133,23 +163,20 @@ const App = () => {
                 profilePicture={profilePicture}
                 />
         </Toolbar>
-      </AppBar>
-
-    <Router>
-      <div>
-        <nav >
-          <ul>
+        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+        {/* <Sidebar bgColor='black' isCollapsed={false}>        
+      <ul>
             <li>
-              <Link to='/'>Home</Link>
+              
             </li>
             <li>
-              <Link to='/login'>Log in</Link>
+              
             </li>
             <li>
-              <Link to='/search'>Search</Link>
+              
             </li>
             <li>
-              <Link to='/list'>My List</Link>
+              
             </li>
             <li>
               <Link to='/AutoComplete'>AutoComplete</Link>
@@ -158,7 +185,25 @@ const App = () => {
               <Link to='/Details'>Details</Link>
             </li>
           </ul>
-        </nav>
+      </Sidebar> */}
+      <Button aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}>
+        Menu
+      </Button>
+      <Menu
+        id="fade-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+      >
+        <MenuItem onClick={handleClose}><Link to='/'>Home</Link></MenuItem>
+        <MenuItem onClick={handleClose}><Link to='/list'>My List</Link></MenuItem>
+        <MenuItem onClick={handleClose}><Link to='/AutoComplete'>Search</Link></MenuItem>
+      </Menu>
+    </IconButton>
+      </AppBar>
+     
         <main>
 
           <section>
@@ -201,6 +246,8 @@ const App = () => {
         </main>
       </div>
     </Router>
+    
+
     <Snackbar
         open={logoutError}
         autoHideDuration={10000}
@@ -217,6 +264,8 @@ const App = () => {
       <Logout />
 
     </div> */}
+      
+
   </div>
   );
 }

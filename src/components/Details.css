@@ -1,0 +1,19 @@
+.container {
+  height: 100%;
+  width: 40%;
+  padding-top: 1rem;
+  margin-left: 30%;
+  /* display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex; */
+  /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s; */
+  display: flex;
+  justify-content: center;  
+}
+
+.flex-item {
+  list-style-type: none;
+  text-align: center;
+}
