@@ -44,21 +44,27 @@ api = Api(app=app, title="Greenacre Hub",
 # app.secret_key = app.config['SECRET_KEY']
 
 
-class Investor(db.Model):
+class Investor(UserMixin, db.Model):
     __tablename__ = 'investors'
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.Text)
-
+    id = db.Column(db.Text, primary_key=True)
+    name = db.Column(db.Text)
+    profile_pic = db.Column(db.Text)
     # one-to-many
     investment_lists = db.relationship(
         'InvestmentList', backref='investor', lazy='dynamic')
 
-    def __init__(self, username):
-        self.username = username
+    def __init__(self, ident, name, profile_pic):
+        self.id = ident
+        self.name = name
+        self.profile_pic = profile_pic
+
+    def update(self, name, profile_pic):
+        self.name = name
+        self.profile_pic = profile_pic
 
     def __repr__(self):
-        return f"<Investor {self.username}>"
+        return f"<Investor {self.id} {self.name}>"
 
     def report_lists(self):
         print("investment lists:")
@@ -80,7 +86,7 @@ class InvestmentList(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     list_name = db.Column(db.Text)
-    investor_id = db.Column(db.Integer, db.ForeignKey('investors.id'))
+    investor_id = db.Column(db.Text, db.ForeignKey('investors.id'))
     investment_properties = db.relationship("InvestmentProperty",
                                             secondary=association_table,
                                             backref=db.backref("investment_lists", lazy='dynamic'))
@@ -109,17 +115,17 @@ class InvestmentProperty(db.Model):
         return f"<Investment Property {self.address}>"
 
 
-class User(UserMixin):
-    """Simple User class that stores ID, name, and profile image."""
+# class User(UserMixin):
+#     """Simple User class that stores ID, name, and profile image."""
 
-    def __init__(self, ident, name, profile_pic):
-        self.id = ident
-        self.name = name
-        self.profile_pic = profile_pic
+#     def __init__(self, ident, name, profile_pic):
+#         self.id = ident
+#         self.name = name
+#         self.profile_pic = profile_pic
 
-    def update(self, name, profile_pic):
-        self.name = name
-        self.profile_pic = profile_pic
+#     def update(self, name, profile_pic):
+#         self.name = name
+#         self.profile_pic = profile_pic
 
 
 # A simple user manager.  A real world application would implement the same
@@ -132,16 +138,26 @@ class UserManager(object):
     """
 
     def __init__(self):
+        investers_in_db = Investor.query.all()
+        known_users_sub_ids = [invester.id for invester in investers_in_db]
         self.known_users = {}
+        app.logger.info(known_users_sub_ids)
+        for invester in investers_in_db:
+            self.known_users[invester.id] = invester
 
     def add_or_update_google_user(self, google_subscriber_id, name,
                                   profile_pic):
         """Add or update user profile info."""
         if google_subscriber_id in self.known_users:
+            app.logger.info("user alreayd in database")
             self.known_users[google_subscriber_id].update(name, profile_pic)
         else:
+            app.logger.info("user not in database")
             self.known_users[google_subscriber_id] = \
-                User(google_subscriber_id, name, profile_pic)
+                Investor(ident=google_subscriber_id,
+                         name=name, profile_pic=profile_pic)
+            db.session.add(self.known_users[google_subscriber_id])
+            db.session.commit()
         return self.known_users[google_subscriber_id]
 
     def lookup_user(self, google_subscriber_id):
@@ -151,9 +167,9 @@ class UserManager(object):
 
 user_manager = UserManager()
 
-# The user loader looks up a user by their user ID, and is called by
-# flask-login to get the current user from the session.  Return None
-# if the user ID isn't valid.
+# # The user loader looks up a user by their user ID, and is called by
+# # flask-login to get the current user from the session.  Return None
+# # if the user ID isn't valid.
 
 
 @login.user_loader
@@ -169,7 +185,7 @@ class Me(Resource):
     DELETE will log out the currently logged-in user.
     """
 
-    a_user = api.model("User", {
+    a_user = api.model("Investor", {
         'google_id': fields.Integer(
             description="The user's Google account ID"),
         'name': fields.String(description="The user's full name"),
@@ -251,14 +267,14 @@ def get_property_id(address):
     return property_details_json
 
 
-@app.route('/addinvestor', methods=['GET', 'POST'])
-def add_investor():
+# @app.route('/addinvestor', methods=['GET', 'POST'])
+# def add_investor():
 
-    new_investor = Investor(name)
-    db.session.add(new_investor)
-    db.session.commit()
+#     new_investor = Investor(name)
+#     db.session.add(new_investor)
+#     db.session.commit()
 
-    return {new_investor.name}
+#     return {new_investor.name}
 
 
 if __name__ == '__main__':
