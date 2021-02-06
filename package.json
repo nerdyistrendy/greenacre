@@ -37,6 +37,7 @@
   "scripts": {
     "start": "react-dotenv && react-scripts start",
     "start-api": "cd api && venv/bin/flask run --no-debugger",
+    "begin": "react-dotenv && react-scripts start && cd api && venv/bin/flask run --no-debugger",
     "build": "react-dotenv && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
