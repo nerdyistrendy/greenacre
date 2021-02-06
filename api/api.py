@@ -13,7 +13,7 @@ import google_token
 import logging
 # from marshmallow from Marshmallow
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/greenacre"
 # "postgresql:///greenacre"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -249,10 +249,9 @@ class Me(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
-@app.route("/")
-def hello():
-    return "Hello World!"
-
+@app.route('/')
+def index():
+   return app.send_static_file('index.html')
 
 @app.route("/details/<property_id>")
 def get_property_details(property_id):
@@ -288,11 +287,10 @@ def handle_list():
         else:
             return {"error": "The request payload is not in JSON format"}
 
-
-    
-
-
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
