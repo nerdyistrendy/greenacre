@@ -1,14 +1,16 @@
-from flask import Flask, request, jsonify, render_template, url_for, redirect
+from flask import Flask, request, jsonify, render_template, url_for, redirect, g
 from gateways.realtor_gateway import RealtorGateway
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restx import Api, Resource, fields
 from flask_login import LoginManager, UserMixin, login_user, \
-    login_required, logout_user
+    login_required, logout_user, user_loaded_from_header
 from flask_login import current_user
 from http import HTTPStatus
 import google_token
+from flask.sessions import SecureCookieSessionInterface
+
 
 import logging
 # from marshmallow from Marshmallow
@@ -34,12 +36,22 @@ try:
     app.config['REMEMBER_COOKIE_HTTPONLY'] = True
 except RuntimeError:
     pass
+# class CustomSessionInterface(SecureCookieSessionInterface):
+#     """Prevent creating session from API requests."""
+#     def save_session(self, *args, **kwargs):
+#         if g.get('login_via_header'):
+#             return
+#         return super(CustomSessionInterface, self).save_session(*args,
+#                                                                 **kwargs)
+
+# app.session_interface = CustomSessionInterface()
+
 login = LoginManager()
 login.init_app(app)
 login.session_protection = 'strong'
 
 api = Api(app=app, title="Greenacre Hub",
-          description="Simple app to find your dream property")
+        description="Simple app to find your dream property")
 
 # app.secret_key = app.config['SECRET_KEY']
 
@@ -149,7 +161,7 @@ class UserManager(object):
                                 profile_pic):
         """Add or update user profile info."""
         if google_subscriber_id in self.known_users:
-            # app.logger.info("user alreayd in database")
+            app.logger.info("user alreayd in database")
             self.known_users[google_subscriber_id].update(name, profile_pic)
         else:
             app.logger.info("user not in database")
@@ -163,6 +175,8 @@ class UserManager(object):
 
     def lookup_user(self, google_subscriber_id):
         """Lookup user by ID.  Returns User object."""
+        # app.logger.info(google_subscriber_id)
+
         return self.known_users.get(google_subscriber_id)
 
 
@@ -172,6 +186,9 @@ user_manager = UserManager()
 # # flask-login to get the current user from the session.  Return None
 # # if the user ID isn't valid.
 
+# @user_loaded_from_header.connect
+# def user_loaded_from_header(self, user=None):
+#     g.login_via_header = True
 
 @login.user_loader
 def user_loader(user_id):
@@ -187,7 +204,7 @@ class Me(Resource):
     """
 
     a_user = api.model("Investor", {
-        'google_id': fields.Integer(
+        'google_id': fields.String(
             description="The user's Google account ID"),
         'name': fields.String(description="The user's full name"),
         'picture': fields.Url(description="A URL to the profile image"),
@@ -292,6 +309,7 @@ def not_found(e):
     return app.send_static_file('index.html')
 
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
+    app.run(host='0.0.0.0', debug=False)
+
+#, port=os.environ.get('PORT', 80)
