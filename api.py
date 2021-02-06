@@ -16,7 +16,7 @@ import logging
 # from marshmallow from Marshmallow
 
 app = Flask(__name__, static_folder='./build', static_url_path='/')
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xoxcdctkjyfkiy:c9d91e3861cf7c23aeac92d6af204c56de3362d17363a0a7f0f7a22f115315cc@ec2-54-211-77-238.compute-1.amazonaws.com:5432/d8sshqd55s4lb8"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://pkqavaditeyryg:c7c2acf164ffff088caf7f1566beefaa88ba2c8337634691b7af83fc9141ce5e@ec2-3-214-3-162.compute-1.amazonaws.com:5432/d8lv9pn019u4nf"
 # "postgresql://postgres:postgres@localhost:5432/greenacre"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 client_id = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
@@ -273,7 +273,7 @@ def index():
 @app.route("/details/<property_id>")
 def get_property_details(property_id):
     property_details_json = realtor_GW.show_details(property_id)
-
+    # print(property_details_json)
     return property_details_json
 
 

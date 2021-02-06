@@ -11,7 +11,7 @@ const clientId =
 
   axios.defaults.headers.common['X-Requested-With'] = 'XmlHttpRequest'
 
-  const API_URL_BASE = 'https://greenacre-hub.herokuapp.com/'
+  const API_URL_BASE = '/'
 
 const useStyles = makeStyles(theme => ({
     content: {

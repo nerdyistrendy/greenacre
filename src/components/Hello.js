@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
         marginTop: 40,
     },
 }));
-const API_URL_BASE = 'https://greenacre-hub.herokuapp.com/'
+const API_URL_BASE = '/'
 
 export function Hello(props) {
     const [name, setName] = useState("");
