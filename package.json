@@ -37,11 +37,12 @@
   "scripts": {
     "start": "react-dotenv && react-scripts start",
     "start-api": "cd api && venv/bin/flask run --no-debugger",
-    "begin": "react-dotenv && react-scripts start && cd api && venv/bin/flask run --no-debugger",
+    "stars": "react-dotenv && react-scripts start && cd api && venv/bin/flask run --no-debugger",
     "build": "react-dotenv && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "react-dotenv && serve build"
+    "serve": "react-dotenv && serve build",
+    "heroku-postbuild": "cd api && venv/bin/flask run --no-debugger"
   },
   "eslintConfig": {
     "extends": [
