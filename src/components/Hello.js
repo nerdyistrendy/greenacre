@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
         marginTop: 40,
     },
 }));
-
+const API_URL_BASE = 'https://greenacre-hub.herokuapp.com/'
 
 export function Hello(props) {
     const [name, setName] = useState("");
@@ -20,7 +20,7 @@ export function Hello(props) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const r = await axios.get('/me');
+                const r = await axios.get(`${API_URL_BASE}me`);
                 setName(r.data.name);
                 setSub(r.data.google_id);
             } catch(e) {

@@ -40,7 +40,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 
 import './App.css';
 
-const API_URL_BASE = 'https://greenacre-hub-backend.herokuapp.com/'
+const API_URL_BASE = 'https://greenacre-hub.herokuapp.com/'
 const clientId = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
 axios.defaults.headers.common['X-Requested-With'] = 'XmlHttpRequest'
 
@@ -84,7 +84,7 @@ const App = () => {
   function handleLogout() {
       async function do_logout() {
           try {
-              const result = await axios.delete('/me');
+              const result = await axios.delete(`${API_URL_BASE}me`);
               if (result.status === 200 || result.status === 204) {
                   setAuthRequired(true);
               }
@@ -99,7 +99,7 @@ const App = () => {
       async function fetchData() {
           if (!authRequired) {
               try {
-                  const r = await axios.get('/me');
+                  const r = await axios.get(`${API_URL_BASE}me`);
                   setProfilePicture(r.data.picture);
               } catch(e) {
                   if (e.response) {

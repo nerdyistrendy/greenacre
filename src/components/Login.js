@@ -11,6 +11,7 @@ const clientId =
 
   axios.defaults.headers.common['X-Requested-With'] = 'XmlHttpRequest'
 
+  const API_URL_BASE = 'https://greenacre-hub.herokuapp.com/'
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -31,7 +32,7 @@ export function Login(props) {
             var formData = new FormData();
             formData.set("id_token", d.tokenObj.id_token);
             try {
-                await axios.post('/me', formData);
+                await axios.post(`${API_URL_BASE}me`, formData);
                 props.setAuthRequired(false);
             } catch(e) {
                 setLoginError(true);

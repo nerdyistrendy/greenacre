@@ -14,10 +14,10 @@ import logging
 # from marshmallow from Marshmallow
 
 app = Flask(__name__, static_folder='./build', static_url_path='/')
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://txgnelhoxmxqiv:88081ccd85b04c0c00b068c2e03b467bf35c5a133efe0164c6dd08ffd9626d42@ec2-52-6-178-202.compute-1.amazonaws.com:5432/d97q7pvno8b92r"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xoxcdctkjyfkiy:c9d91e3861cf7c23aeac92d6af204c56de3362d17363a0a7f0f7a22f115315cc@ec2-54-211-77-238.compute-1.amazonaws.com:5432/d8sshqd55s4lb8"
 # "postgresql://postgres:postgres@localhost:5432/greenacre"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-client_id = '707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com'
+client_id = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
 app.logger.info("test logger")
 
 db = SQLAlchemy(app)
@@ -74,11 +74,11 @@ class Investor(UserMixin, db.Model):
 
 # many to many
 association_table = db.Table('association',
-                            db.Column('investment_lists_id', db.Integer, db.ForeignKey(
-                                'investment_lists.id'), primary_key=True),
-                            db.Column('investment_properties_id', db.Integer, db.ForeignKey(
-                                'investment_properties.id'), primary_key=True)
-                            )
+                             db.Column('investment_lists_id', db.Integer, db.ForeignKey(
+                                 'investment_lists.id'), primary_key=True),
+                             db.Column('investment_properties_id', db.Integer, db.ForeignKey(
+                                 'investment_properties.id'), primary_key=True)
+                             )
 
 
 class InvestmentList(db.Model):
@@ -138,15 +138,15 @@ class UserManager(object):
     """
 
     def __init__(self):
-        investors_in_db = Investor.query.all()
-        known_users_sub_ids = [investor.id for investor in investors_in_db]
+        # investors_in_db = Investor.query.all()
+        # known_users_sub_ids = [investor.id for investor in investors_in_db]
         self.known_users = {}
         # app.logger.info(known_users_sub_ids)
         for investor in investors_in_db:
             self.known_users[investor.id] = investor
 
     def add_or_update_google_user(self, google_subscriber_id, name,
-                                profile_pic):
+                                  profile_pic):
         """Add or update user profile info."""
         if google_subscriber_id in self.known_users:
             # app.logger.info("user alreayd in database")
@@ -155,10 +155,10 @@ class UserManager(object):
             app.logger.info("user not in database")
             self.known_users[google_subscriber_id] = \
                 Investor(ident=google_subscriber_id,
-                        name=name, profile_pic=profile_pic)
-            favorite = InvestmentList("favorite", google_subscriber_id)
-            db.session.add_all([self.known_users[google_subscriber_id], favorite])
-            db.session.commit()
+                         name=name, profile_pic=profile_pic)
+            # favorite = InvestmentList("favorite", google_subscriber_id)
+            # db.session.add_all([self.known_users[google_subscriber_id], favorite])
+            # db.session.commit()
         return self.known_users[google_subscriber_id]
 
     def lookup_user(self, google_subscriber_id):
@@ -253,6 +253,7 @@ class Me(Resource):
 def index():
     return app.send_static_file('index.html')
 
+
 @app.route("/details/<property_id>")
 def get_property_details(property_id):
     property_details_json = realtor_GW.show_details(property_id)
@@ -265,6 +266,7 @@ def get_property_id(address):
     property_details_json = realtor_GW.get_property_id_by_address(address)
 
     return property_details_json
+
 
 @app.route("/<id>/<list_name>", methods=['POST', 'GET'])
 def handle_list():
@@ -280,17 +282,18 @@ def handle_list():
     elif request.method == 'POST':
         if request.is_json:
             data = request.get_json()
-            new_property = InvestmentProperty(address=data['name'], price=data['model'], doors=data['doors'])
+            new_property = InvestmentProperty(
+                address=data['name'], price=data['model'], doors=data['doors'])
             db.session.add(new_car)
             db.session.commit()
             return {"message": f"car {new_car.name} has been created successfully."}
         else:
             return {"error": "The request payload is not in JSON format"}
 
+
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
-
 
 
 if __name__ == '__main__':
