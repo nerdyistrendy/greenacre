@@ -14,8 +14,8 @@ import logging
 # from marshmallow from Marshmallow
 
 app = Flask(__name__, static_folder='./build', static_url_path='/')
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/greenacre"
-# "postgresql:///greenacre"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://txgnelhoxmxqiv:88081ccd85b04c0c00b068c2e03b467bf35c5a133efe0164c6dd08ffd9626d42@ec2-52-6-178-202.compute-1.amazonaws.com:5432/d97q7pvno8b92r"
+# "postgresql://postgres:postgres@localhost:5432/greenacre"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 client_id = '707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com'
 app.logger.info("test logger")
@@ -74,11 +74,11 @@ class Investor(UserMixin, db.Model):
 
 # many to many
 association_table = db.Table('association',
-                             db.Column('investment_lists_id', db.Integer, db.ForeignKey(
-                                 'investment_lists.id'), primary_key=True),
-                             db.Column('investment_properties_id', db.Integer, db.ForeignKey(
-                                 'investment_properties.id'), primary_key=True)
-                             )
+                            db.Column('investment_lists_id', db.Integer, db.ForeignKey(
+                                'investment_lists.id'), primary_key=True),
+                            db.Column('investment_properties_id', db.Integer, db.ForeignKey(
+                                'investment_properties.id'), primary_key=True)
+                            )
 
 
 class InvestmentList(db.Model):
@@ -141,7 +141,7 @@ class UserManager(object):
         investors_in_db = Investor.query.all()
         known_users_sub_ids = [investor.id for investor in investors_in_db]
         self.known_users = {}
-        app.logger.info(known_users_sub_ids)
+        # app.logger.info(known_users_sub_ids)
         for investor in investors_in_db:
             self.known_users[investor.id] = investor
 
@@ -149,7 +149,7 @@ class UserManager(object):
                                 profile_pic):
         """Add or update user profile info."""
         if google_subscriber_id in self.known_users:
-            app.logger.info("user alreayd in database")
+            # app.logger.info("user alreayd in database")
             self.known_users[google_subscriber_id].update(name, profile_pic)
         else:
             app.logger.info("user not in database")
