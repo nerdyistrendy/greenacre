@@ -251,7 +251,7 @@ class Me(Resource):
 
 @app.route('/')
 def index():
-   return app.send_static_file('index.html')
+    return app.send_static_file('index.html')
 
 @app.route("/details/<property_id>")
 def get_property_details(property_id):
@@ -290,6 +290,7 @@ def handle_list():
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
+
 
 
 if __name__ == '__main__':
