@@ -40,7 +40,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 
 import './App.css';
 
-const API_URL_BASE = 'http://127.0.0.1:5000/'
+const API_URL_BASE = 'https://greenacre-hub-frontend.herokuapp.com/'
 const clientId = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
 axios.defaults.headers.common['X-Requested-With'] = 'XmlHttpRequest'
 
