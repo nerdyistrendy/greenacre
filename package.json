@@ -41,7 +41,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "react-dotenv && serve build",
-    "heroku-postbuild": "pip install -r requirements.txt && cd api && gunicorn api:app"
+    "heroku-postbuild": "cd api && venv/bin/flask run --no-debugger"
   },
   "eslintConfig": {
     "extends": [
