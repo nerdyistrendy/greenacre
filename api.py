@@ -15,7 +15,7 @@ from flask.sessions import SecureCookieSessionInterface
 import logging
 # from marshmallow from Marshmallow
 
-app = Flask(__name__, static_folder='./build', static_url_path='/index')
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://lpmmxmxezxaezh:03342c099f64d413aa203968956f57632357c88b94c7330c15b163332d883f5c@ec2-34-230-167-186.compute-1.amazonaws.com:5432/d32kvqgijipm7b"
 # "postgresql://postgres:postgres@localhost:5432/greenacre"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
