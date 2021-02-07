@@ -16,7 +16,7 @@ import logging
 # from marshmallow from Marshmallow
 
 app = Flask(__name__, static_folder='./build', static_url_path='/')
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://bmlgmkqkijdfjq:f843eb0452eb32a8804321fe7bc66084a5c16e6d8b44d64d98c694113b9ac29b@ec2-34-230-167-186.compute-1.amazonaws.com:5432/d8ua6s9v8sdn2v"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xoxcdctkjyfkiy:c9d91e3861cf7c23aeac92d6af204c56de3362d17363a0a7f0f7a22f115315cc@ec2-54-211-77-238.compute-1.amazonaws.com:5432/d8sshqd55s4lb8"
 # "postgresql://postgres:postgres@localhost:5432/greenacre"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 client_id = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
