@@ -11,7 +11,7 @@ from http import HTTPStatus
 import google_token
 from flask.sessions import SecureCookieSessionInterface
 
-
+import json
 import logging
 # from marshmallow from Marshmallow
 
@@ -51,7 +51,7 @@ login.init_app(app)
 login.session_protection = 'strong'
 
 api = Api(app=app, title="Greenacre Hub",
-        description="Simple app to find your dream property")
+          description="Simple app to find your dream property")
 
 # app.secret_key = app.config['SECRET_KEY']
 
@@ -86,11 +86,11 @@ class Investor(UserMixin, db.Model):
 
 # many to many
 association_table = db.Table('association',
-                            db.Column('investment_lists_id', db.Integer, db.ForeignKey(
-                                'investment_lists.id'), primary_key=True),
-                            db.Column('investment_properties_id', db.Integer, db.ForeignKey(
-                                'investment_properties.id'), primary_key=True)
-                            )
+                             db.Column('investment_lists_id', db.Integer, db.ForeignKey(
+                                 'investment_lists.id'), primary_key=True),
+                             db.Column('investment_properties_id', db.Integer, db.ForeignKey(
+                                 'investment_properties.id'), primary_key=True)
+                             )
 
 
 class InvestmentList(db.Model):
@@ -117,9 +117,11 @@ class InvestmentProperty(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.Text)
     price = db.Column(db.Text)
+    property_id = db.Column(db.Text)
     # investment_list_ids = db.Column(db.Integer[])
 
-    def __init__(self, address, price):
+    def __init__(self, property_id, address, price):
+        self.property_id = property_id
         self.address = address
         self.price = price
 
@@ -158,7 +160,7 @@ class UserManager(object):
             self.known_users[investor.id] = investor
 
     def add_or_update_google_user(self, google_subscriber_id, name,
-                                profile_pic):
+                                  profile_pic):
         """Add or update user profile info."""
         if google_subscriber_id in self.known_users:
             app.logger.info("user alreayd in database")
@@ -167,9 +169,10 @@ class UserManager(object):
             app.logger.info("user not in database")
             self.known_users[google_subscriber_id] = \
                 Investor(ident=google_subscriber_id,
-                        name=name, profile_pic=profile_pic)
+                         name=name, profile_pic=profile_pic)
             favorite = InvestmentList("favorite", google_subscriber_id)
-            db.session.add_all([self.known_users[google_subscriber_id], favorite])
+            db.session.add_all(
+                [self.known_users[google_subscriber_id], favorite])
             db.session.commit()
         return self.known_users[google_subscriber_id]
 
@@ -189,6 +192,7 @@ user_manager = UserManager()
 # @user_loaded_from_header.connect
 # def user_loaded_from_header(self, user=None):
 #     g.login_via_header = True
+
 
 @login.user_loader
 def user_loader(user_id):
@@ -270,46 +274,72 @@ class Me(Resource):
 def index():
     return app.send_static_file('index.html')
 
+
 @app.route("/details/<property_id>")
 def get_property_details(property_id):
-    property_details_json = realtor_GW.show_details(property_id)
-    # print(property_details_json)
+    property_details = realtor_GW.show_details(property_id)
+    # add property to db investment_properties if not already in it
+    property_details_json = json.loads(property_details[0])
+    matched_property = InvestmentProperty.query.filter_by(
+        property_id=property_id).first()
+    if not matched_property:
+        # add property to table investment_properties
+        new_property = InvestmentProperty(
+            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+property_details_json["properties"][0]["address"]["city"], price=property_details_json["properties"][0]["price"])
+        db.session.add(new_property)
+        db.session.commit()
     return property_details_json
 
 
-@app.route("/id/<address>")
+@app.route("/id/<address>", methods=['GET'])
 def get_property_id(address):
     property_details_json = realtor_GW.get_property_id_by_address(address)
 
     return property_details_json
 
-@app.route("/<id>/<list_name>", methods=['POST', 'GET'])
-def handle_list():
-    if request.method == 'GET':
-        properties = InvestmentProperty.query.all()
-        results = [
-            {
-                "address": property.name,
-                "price": property.model,
-            } for property in properties]
+# get properties under a list
 
-        return {results}
-    elif request.method == 'POST':
-        if request.is_json:
-            data = request.get_json()
-            new_property = InvestmentProperty(address=data['name'], price=data['model'], doors=data['doors'])
-            db.session.add(new_car)
-            db.session.commit()
-            return {"message": f"car {new_car.name} has been created successfully."}
-        else:
-            return {"error": "The request payload is not in JSON format"}
 
-@app.errorhandler(404)
-def not_found(e):
-    return app.send_static_file('index.html')
+@app.route("/<investor_id>/<list_name>", methods=['GET'])
+def get_properties(investor_id, list_name):
+    property_list = InvestmentList.query.filter_by(
+        list_name=list_name, investor_id=investor_id).first()
+    properties = property_list.investment_properties
+    results = [
+        {
+            "address": property.address,
+            "price": property.price,
+        } for property in properties]
+    return {"message": f"{list_name} has {results}."}
+
+
+# add property to a list
+@app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
+def add_property(investor_id, list_name, property_id):
+    property_list = InvestmentList.query.filter_by(
+        list_name=list_name, investor_id=investor_id).first()
+    new_property = InvestmentProperty.query.filter_by(
+        property_id=property_id).first()
+
+    if new_property in property_list.investment_properties :
+        return {"message": f"{property_id} has already in {list_name}."}
+    elif not property_list or not new_property :
+        return {"message : list or property not found"}
+    else :
+        property_list.investment_properties.append(new_property)
+        db.session.add(property_list)
+        db.session.commit()
+        # print(property_list.investment_properties)
+        # print(new_property.investment_lists)
+        return {"message": f"{property_id} has been added to {list_name}."}
+
+
+# @app.errorhandler(404)
+# def not_found(e):
+#     return app.send_static_file('index.html')
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False)
 
-#, port=os.environ.get('PORT', 80)
+# , port=os.environ.get('PORT', 80)

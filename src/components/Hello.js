@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const API_URL_BASE = "/";
-// const API_URL_BASE = "/";
 
 export function Hello(props) {
   const [name, setName] = useState("");
