@@ -21,15 +21,6 @@ export function Hello(props) {
     props.setAuthRequired,
   ];
 
-  const [currentUser, setCurrentUser] = [
-    props.currentUser,
-    props.setCurrentUser,
-  ];
-
-  const onTrigger = (r) => {
-    props.getLists(r);
-}
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -37,7 +28,6 @@ export function Hello(props) {
         //r{'google_id': current_user.id,
         // 'name': current_user.name,
         // 'picture': current_user.profile_pic}
-        onTrigger(r.data);
         setName(r.data.name);
         setSub(r.data.google_id);
       } catch (e) {

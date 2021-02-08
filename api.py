@@ -66,8 +66,8 @@ class Investor(UserMixin, db.Model):
     investment_lists = db.relationship(
         'InvestmentList', backref='investor', lazy='dynamic')
 
-    def __init__(self, ident, name, profile_pic):
-        self.id = ident
+    def __init__(self, id, name, profile_pic):
+        self.id = id
         self.name = name
         self.profile_pic = profile_pic
 
@@ -169,9 +169,9 @@ class UserManager(object):
         else:
             app.logger.info("user not in database")
             self.known_users[google_subscriber_id] = \
-                Investor(ident=google_subscriber_id,
+                Investor(id=google_subscriber_id,
                          name=name, profile_pic=profile_pic)
-            favorite = InvestmentList("favorite", google_subscriber_id)
+            favorite = InvestmentList("Favorite", google_subscriber_id)
             db.session.add_all(
                 [self.known_users[google_subscriber_id], favorite])
             db.session.commit()
@@ -312,7 +312,9 @@ def get_lists(investor_id):
     property_lists = InvestmentList.query.filter_by(
         investor_id=investor.id).all()
     # results = [list for list in property_lists]
-    return {"message": f"{property_lists}"}
+    property_list_names = [
+        property_list.list_name for property_list in property_lists]
+    return {"message": property_list_names}
 
 
 @ app.route("/<investor_id>/<list_name>", methods=['GET'])
@@ -320,12 +322,12 @@ def get_properties(investor_id, list_name):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
     properties = property_list.investment_properties
-    # results = [
-    #     {
-    #         "address": property.address,
-    #         "price": property.price,
-    #     } for property in properties]
-    return {"message": f"{properties}"}
+    results = [
+        {
+            "address": property.address,
+            "price": property.price,
+        } for property in properties]
+    return {"message": f"{results}"}
 
 
 # add property to a list
