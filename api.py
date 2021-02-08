@@ -200,7 +200,7 @@ def user_loader(user_id):
     return user_manager.lookup_user(user_id)
 
 
-@api.route("/me")
+@app.route("/me")
 class Me(Resource):
     """The currently logged-in user.
     GET will return information about the user if a session exists.
@@ -216,7 +216,7 @@ class Me(Resource):
     })
 
     @login_required
-    @api.response(HTTPStatus.OK, 'Success', a_user)
+    @app.response(HTTPStatus.OK, 'Success', a_user)
     def get(self):
         return jsonify({
             'google_id': current_user.id,
@@ -224,11 +224,11 @@ class Me(Resource):
             'picture': current_user.profile_pic
         })
 
-    @api.param(
+    @app.param(
         'id_token', 'A JWT from the Google Sign-In SDK to be validated',
         _in='formData')
-    @api.response(HTTPStatus.OK, 'Success', a_user)
-    @api.response(HTTPStatus.FORBIDDEN, "Unauthorized")
+    @app.response(HTTPStatus.OK, 'Success', a_user)
+    @app.response(HTTPStatus.FORBIDDEN, "Unauthorized")
     # @csrf_protection
     def post(self):
         # Validate the identity
@@ -264,19 +264,19 @@ class Me(Resource):
         return self.get()
 
     @login_required
-    @api.response(HTTPStatus.NO_CONTENT, "Success")
+    @app.response(HTTPStatus.NO_CONTENT, "Success")
     # @csrf_protection
     def delete(self):
         logout_user()
         return "", HTTPStatus.NO_CONTENT
 
 
-@api.route('/index')
+@app.route('/index')
 def index():
     return app.send_static_file('index.html')
 
 
-@api.route("/details/<property_id>")
+@app.route("/details/<property_id>")
 def get_property_details(property_id) -> json:
     matched_property = InvestmentProperty.query.filter_by(
         property_id=property_id).first()
