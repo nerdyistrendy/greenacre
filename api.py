@@ -118,7 +118,6 @@ class InvestmentProperty(db.Model):
     address = db.Column(db.Text)
     price = db.Column(db.Text)
     property_id = db.Column(db.Text)
-    # investment_list_ids = db.Column(db.Integer[])
 
     def __init__(self, property_id, address, price):
         self.property_id = property_id
@@ -297,8 +296,16 @@ def get_property_id(address):
 
     return property_details_json
 
-# get properties under a list
-
+# get lists
+@app.route("/<investor_id>", methods=['GET'])
+def get_lists(investor_id):
+    investor = Investor.query.filter_by(id=investor_id).first()
+    property_lists = InvestmentList.query.filter_by(investor_id=investor.id).all()
+    results = [
+        {
+            "list": list.list_name,
+        } for list in property_lists]
+    return {"message": f"{investor} has {results}."}
 
 @app.route("/<investor_id>/<list_name>", methods=['GET'])
 def get_properties(investor_id, list_name):
