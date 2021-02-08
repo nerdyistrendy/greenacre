@@ -50,7 +50,7 @@ login = LoginManager()
 login.init_app(app)
 login.session_protection = 'strong'
 
-app = Api(app=app, title="Greenacre Hub",
+api = Api(app=app, title="Greenacre Hub",
           description="Simple app to find your dream property")
 
 # app.secret_key = app.config['SECRET_KEY']
@@ -200,7 +200,7 @@ def user_loader(user_id):
     return user_manager.lookup_user(user_id)
 
 
-@app.route("/me")
+@api.route("/me")
 class Me(Resource):
     """The currently logged-in user.
     GET will return information about the user if a session exists.
@@ -208,7 +208,7 @@ class Me(Resource):
     DELETE will log out the currently logged-in user.
     """
 
-    a_user = app.model("Investor", {
+    a_user = api.model("Investor", {
         'google_id': fields.String(
             description="The user's Google account ID"),
         'name': fields.String(description="The user's full name"),
@@ -216,7 +216,7 @@ class Me(Resource):
     })
 
     @login_required
-    @app.response(HTTPStatus.OK, 'Success', a_user)
+    @api.response(HTTPStatus.OK, 'Success', a_user)
     def get(self):
         return jsonify({
             'google_id': current_user.id,
@@ -224,11 +224,11 @@ class Me(Resource):
             'picture': current_user.profile_pic
         })
 
-    @app.param(
+    @api.param(
         'id_token', 'A JWT from the Google Sign-In SDK to be validated',
         _in='formData')
-    @app.response(HTTPStatus.OK, 'Success', a_user)
-    @app.response(HTTPStatus.FORBIDDEN, "Unauthorized")
+    @api.response(HTTPStatus.OK, 'Success', a_user)
+    @api.response(HTTPStatus.FORBIDDEN, "Unauthorized")
     # @csrf_protection
     def post(self):
         # Validate the identity
@@ -264,14 +264,14 @@ class Me(Resource):
         return self.get()
 
     @login_required
-    @app.response(HTTPStatus.NO_CONTENT, "Success")
+    @api.response(HTTPStatus.NO_CONTENT, "Success")
     # @csrf_protection
     def delete(self):
         logout_user()
         return "", HTTPStatus.NO_CONTENT
 
-
-@app.route('/index')
+@login_required
+@app.route('/')
 def index():
     return app.send_static_file('index.html')
 
