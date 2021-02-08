@@ -51,7 +51,7 @@ login.init_app(app)
 login.session_protection = 'strong'
 
 api = Api(app=app, title="Greenacre Hub",
-          description="Simple app to find your dream property")
+          description="Simple app to find your dream property", doc=False)
 
 # app.secret_key = app.config['SECRET_KEY']
 
