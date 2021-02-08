@@ -50,7 +50,7 @@ login = LoginManager()
 login.init_app(app)
 login.session_protection = 'strong'
 
-api = Api(app=app, title="Greenacre Hub",
+app = Api(app=app, title="Greenacre Hub",
           description="Simple app to find your dream property")
 
 # app.secret_key = app.config['SECRET_KEY']
@@ -208,7 +208,7 @@ class Me(Resource):
     DELETE will log out the currently logged-in user.
     """
 
-    a_user = api.model("Investor", {
+    a_user = app.model("Investor", {
         'google_id': fields.String(
             description="The user's Google account ID"),
         'name': fields.String(description="The user's full name"),
