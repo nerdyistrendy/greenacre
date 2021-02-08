@@ -5,6 +5,7 @@ import { useForm } from "react-cool-form";
 import "./AddToListForm.css";
 import "./styles.scss";
 
+
 const Field = ({ label, id, ...rest }) => (
   <>
     <input id={id} {...rest} />
@@ -22,9 +23,9 @@ const AddToListForm = (props) => {
     <form ref={form}>
       <fieldset>
         <legend>Fruit</legend>
-        <Field label="🍎" id="apple" name="fruit" value="🍎" type="radio" />
-        <Field label="🍋" id="lemon" name="fruit" value="🍋" type="radio" />
-        <Field label="🥝" id="kiwi" name="fruit" value="🥝" type="radio" />
+        {/* {props.getLists.map(function(list, index) {
+          return <Field key ={index} label={list.list_name} id={list.id} name={list.list_name} value={list.list_name} type="radio" />
+        })} */}
       </fieldset>
       <input type="submit" />
     </form>

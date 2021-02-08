@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-
+import AddToListForm from "./AddToListForm"
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,10 +20,24 @@ export function Hello(props) {
     props.authRequired,
     props.setAuthRequired,
   ];
+
+  const [currentUser, setCurrentUser] = [
+    props.currentUser,
+    props.setCurrentUser,
+  ];
+
+  const onTrigger = (r) => {
+    props.getLists(r);
+}
+
   useEffect(() => {
     async function fetchData() {
       try {
         const r = await axios.get(`${API_URL_BASE}me`);
+        //r{'google_id': current_user.id,
+        // 'name': current_user.name,
+        // 'picture': current_user.profile_pic}
+        onTrigger(r.data);
         setName(r.data.name);
         setSub(r.data.google_id);
       } catch (e) {

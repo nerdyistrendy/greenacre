@@ -29,7 +29,7 @@ const Details = (props) => {
             : ""}
         </li>
         <li>{props.currentProperty
-            ? <AddToListForm currentProperty={props.currentProperty}/>
+            ? <AddToListForm currentProperty={props.currentProperty} currentUser={props.currentUser} getLists={props.getLists}/>
             : ""}</li>  
       </ul>
 

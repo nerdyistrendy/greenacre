@@ -118,33 +118,35 @@ class InvestmentProperty(db.Model):
     address = db.Column(db.Text)
     price = db.Column(db.Text)
     property_id = db.Column(db.Text)
+    details_str = db.Column(db.Text)
 
-    def __init__(self, property_id, address, price):
+    def __init__(self, property_id, address, price, details_str):
         self.property_id = property_id
         self.address = address
         self.price = price
+        self.details_str = details_str
 
     def __repr__(self):
         return f"<Investment Property {self.address}>"
 
+        # class User(UserMixin):
+        #     """Simple User class that stores ID, name, and profile image."""
 
-# class User(UserMixin):
-#     """Simple User class that stores ID, name, and profile image."""
+        #     def __init__(self, ident, name, profile_pic):
+        #         self.id = ident
+        #         self.name = name
+        #         self.profile_pic = profile_pic
 
-#     def __init__(self, ident, name, profile_pic):
-#         self.id = ident
-#         self.name = name
-#         self.profile_pic = profile_pic
+        #     def update(self, name, profile_pic):
+        #         self.name = name
+        #         self.profile_pic = profile_pic
 
-#     def update(self, name, profile_pic):
-#         self.name = name
-#         self.profile_pic = profile_pic
+        # A simple user manager.  A real world application would implement the same
+        # interface but using a database as a backing store.  Note that this
+        # implementation will behave unexpectedly if the user contacts multiple
+        # instances of the application since it is using an in-memory store.
 
 
-# A simple user manager.  A real world application would implement the same
-# interface but using a database as a backing store.  Note that this
-# implementation will behave unexpectedly if the user contacts multiple
-# instances of the application since it is using an in-memory store.
 class UserManager(object):
     """Simple user manager class.
     Replace with something that talks to your database instead.
@@ -275,64 +277,70 @@ def index():
 
 
 @app.route("/details/<property_id>")
-def get_property_details(property_id):
-    property_details = realtor_GW.show_details(property_id)
-    # add property to db investment_properties if not already in it
-    property_details_json = json.loads(property_details[0])
+def get_property_details(property_id) -> json:
     matched_property = InvestmentProperty.query.filter_by(
         property_id=property_id).first()
-    if not matched_property:
+    if matched_property:
+        app.logger.info("fetching property details from database ... ")
+        return json.loads(matched_property.details_str)
+    else:
+        app.logger.info("calling realtor API to fetch property details ...")
+        property_details = realtor_GW.show_details(property_id)
+        property_details_str = property_details[0].decode('UTF-8')
+    # add property to db investment_properties if not already in it
+        property_details_json = json.loads(property_details_str)
         # add property to table investment_properties
         new_property = InvestmentProperty(
-            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+property_details_json["properties"][0]["address"]["city"], price=property_details_json["properties"][0]["price"])
+            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+property_details_json["properties"][0]["address"]["city"], price=property_details_json["properties"][0]["price"], details_str=property_details_str)
         db.session.add(new_property)
         db.session.commit()
-    return property_details_json
+        return property_details_json
 
 
-@app.route("/id/<address>", methods=['GET'])
+@ app.route("/id/<address>", methods=['GET'])
 def get_property_id(address):
     property_details_json = realtor_GW.get_property_id_by_address(address)
 
     return property_details_json
 
 # get lists
-@app.route("/<investor_id>", methods=['GET'])
+
+
+@ app.route("/<investor_id>", methods=['GET'])
 def get_lists(investor_id):
     investor = Investor.query.filter_by(id=investor_id).first()
-    property_lists = InvestmentList.query.filter_by(investor_id=investor.id).all()
-    results = [
-        {
-            "list": list.list_name,
-        } for list in property_lists]
-    return {"message": f"{investor} has {results}."}
+    property_lists = InvestmentList.query.filter_by(
+        investor_id=investor.id).all()
+    # results = [list for list in property_lists]
+    return {"message": f"{property_lists}"}
 
-@app.route("/<investor_id>/<list_name>", methods=['GET'])
+
+@ app.route("/<investor_id>/<list_name>", methods=['GET'])
 def get_properties(investor_id, list_name):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
     properties = property_list.investment_properties
-    results = [
-        {
-            "address": property.address,
-            "price": property.price,
-        } for property in properties]
-    return {"message": f"{list_name} has {results}."}
+    # results = [
+    #     {
+    #         "address": property.address,
+    #         "price": property.price,
+    #     } for property in properties]
+    return {"message": f"{properties}"}
 
 
 # add property to a list
-@app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
+@ app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
 def add_property(investor_id, list_name, property_id):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
     new_property = InvestmentProperty.query.filter_by(
         property_id=property_id).first()
 
-    if new_property in property_list.investment_properties :
+    if new_property in property_list.investment_properties:
         return {"message": f"{property_id} has already in {list_name}."}
-    elif not property_list or not new_property :
+    elif not property_list or not new_property:
         return {"message : list or property not found"}
-    else :
+    else:
         property_list.investment_properties.append(new_property)
         db.session.add(property_list)
         db.session.commit()

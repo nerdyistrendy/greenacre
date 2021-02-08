@@ -48,11 +48,8 @@ axios.defaults.headers.common['X-Requested-With'] = 'XmlHttpRequest'
 const useStyles = makeStyles(theme => ({
   title: {
       flexGrow: 1,
-  }
-  
+  }  
 }));
-
-
 
 const ProtectedRoute = ({children, authRequired, ...rest}) => {
   return (
@@ -69,6 +66,7 @@ const App = () => {
 
   /* Is authentication required? */
   const [authRequired, setAuthRequired] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [logoutError, showLogoutError] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -113,7 +111,6 @@ const App = () => {
               setProfilePicture(null);
           }
       };
-
       fetchData();
   }, [authRequired]);
 
@@ -138,18 +135,23 @@ const App = () => {
       setErrorMessage(error.message);
     });
   };
-    
+ 
+  const getLists = (currentUser) => {
+    axios.get(`${API_URL_BASE}${currentUser.google_id}`)
+    .then((response) => {
+    console.log(response)
+     const results = response.data["message"]
+     setCurrentUser(currentUser); 
+     console.log(results)    
+     return results
+   })
+  }
   return (
     <div>
        <CssBaseline />
-
-
-
       <Router>
       <div>
       <AppBar position="static" style={{ background: '#8bc34a' }}>
-
-      
         <Toolbar>
             <Typography color="inherit" variant="h6" className={classes.title}>
                 Greenacre Hub
@@ -201,7 +203,9 @@ const App = () => {
                 <AutoComplete searchPropertyById={searchPropertyById}
                               currentProperty={currentProperty}
                               currentPropertyId={currentPropertyId} 
-                />
+                              currentUser={currentUser}
+                              getLists={getLists}
+                />        
               </Route>
               <Route path='/login'>
                 {/* <Hello /> */}
@@ -213,7 +217,7 @@ const App = () => {
                  />
               </Route>
               <ProtectedRoute authRequired={authRequired} path="/">
-                <Hello setAuthRequired={setAuthRequired} />
+                <Hello setAuthRequired={setAuthRequired} getLists={getLists}/>
               </ProtectedRoute>
             </Switch>
           </section>
