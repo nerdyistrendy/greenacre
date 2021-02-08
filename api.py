@@ -271,12 +271,12 @@ class Me(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
-@app.route('/index')
+@api.route('/index')
 def index():
     return app.send_static_file('index.html')
 
 
-@app.route("/details/<property_id>")
+@api.route("/details/<property_id>")
 def get_property_details(property_id) -> json:
     matched_property = InvestmentProperty.query.filter_by(
         property_id=property_id).first()
@@ -297,7 +297,7 @@ def get_property_details(property_id) -> json:
         return property_details_json
 
 
-@ app.route("/id/<address>", methods=['GET'])
+@ api.route("/id/<address>", methods=['GET'])
 def get_property_id(address):
     property_details_json = realtor_GW.get_property_id_by_address(address)
 
@@ -306,7 +306,7 @@ def get_property_id(address):
 # get lists
 
 
-@ app.route("/<investor_id>", methods=['GET'])
+@ api.route("/<investor_id>", methods=['GET'])
 def get_lists(investor_id):
     investor = Investor.query.filter_by(id=investor_id).first()
     property_lists = InvestmentList.query.filter_by(
@@ -317,7 +317,7 @@ def get_lists(investor_id):
     return {"message": property_list_names}
 
 
-@ app.route("/<investor_id>/<list_name>", methods=['GET'])
+@ api.route("/<investor_id>/<list_name>", methods=['GET'])
 def get_properties(investor_id, list_name):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
@@ -331,7 +331,7 @@ def get_properties(investor_id, list_name):
 
 
 # add property to a list
-@ app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
+@ api.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
 def add_property(investor_id, list_name, property_id):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
