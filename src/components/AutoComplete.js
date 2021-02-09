@@ -74,6 +74,8 @@ export class AutoComplete extends Component {
           address={this.state.address}
           currentUser={this.props.currentUser}
           currentUserLists={this.props.currentUserLists}
+          addPropertyToList={this.props.addPropertyToList}
+          getLists={this.props.getLists} 
         />
       </div>
     );

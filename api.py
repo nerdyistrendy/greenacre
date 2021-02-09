@@ -291,7 +291,7 @@ def get_property_details(property_id) -> json:
         property_details_json = json.loads(property_details_str)
         # add property to table investment_properties
         new_property = InvestmentProperty(
-            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+property_details_json["properties"][0]["address"]["city"], price=property_details_json["properties"][0]["price"], details_str=property_details_str)
+            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+property_details_json["properties"][0]["address"]["city"], price=property_details_json.meta.tracking_params.listingPrice, details_str=property_details_str)
         db.session.add(new_property)
         db.session.commit()
         return property_details_json
@@ -304,8 +304,6 @@ def get_property_id(address):
     return property_details_json
 
 # get lists
-
-
 @app.route("/<investor_id>", methods=['GET'])
 def get_lists(investor_id):
     investor = Investor.query.filter_by(id=investor_id).first()
@@ -341,7 +339,7 @@ def add_property(investor_id, list_name, property_id):
     if new_property in property_list.investment_properties:
         return {"message": f"{property_id} has already in {list_name}."}
     elif not property_list or not new_property:
-        return {"message : list or property not found"}
+        return {"message" : "list or property not found"}
     else:
         property_list.investment_properties.append(new_property)
         db.session.add(property_list)

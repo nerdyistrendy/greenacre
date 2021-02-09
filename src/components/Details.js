@@ -14,7 +14,7 @@ const Details = (props) => {
         </li>
         <li>
           {props.currentProperty
-            ? props.currentProperty.properties[0].property_id
+            ? props.currentProperty.meta.tracking_params.mprId
             : ""}
         </li>
         <li>{props.currentProperty ? props.address : ""}</li>
@@ -29,7 +29,7 @@ const Details = (props) => {
             : ""}
         </li>
         <li>{props.currentProperty
-            ? <AddToListForm currentProperty={props.currentProperty} currentUser={props.currentUser} currentUserLists={props.currentUserLists}/>
+            ? <AddToListForm currentProperty={props.currentProperty} currentUser={props.currentUser} currentUserLists={props.currentUserLists} addPropertyToList={props.addPropertyToList} getLists={props.getLists}/>
             : ""}</li>  
       </ul>
 

@@ -27,7 +27,7 @@ import Alert from "@material-ui/lab/Alert";
 import { ProfileButton } from "./components/ProfileButton";
 import { Login } from "./components/Login";
 import { Hello } from "./components/Hello";
-// import Hello from './components/Hello'
+import AddToListForm from "./components/AddToListForm";
 import Search from "./components/Search";
 import List from "./components/List";
 import AutoComplete from "./components/AutoComplete";
@@ -104,7 +104,6 @@ const App = () => {
           const r = await axios.get(`${API_URL_BASE}me`);
           setProfilePicture(r.data.picture);
           setCurrentUser(r.data)
-          getLists(currentUser)
         } catch (e) {
           if (e.response) {
             if (e.response.status === 401) {
@@ -149,6 +148,27 @@ const App = () => {
       return results;
     });
   };
+
+  const addPropertyToList = (currentUser, currentList, currentProperty) => { 
+    axios.post(`${API_URL_BASE}${currentUser.google_id}/${currentList}/${currentProperty.meta.tracking_params.mprId}`)
+    console.log(currentUser)
+    console.log(currentList)
+    console.log(currentProperty)
+    .then((response) => {
+      console.log(response);
+      return(response)
+      // const results = response.data["message"];
+      // console.log(results);
+      setErrorMessage('');
+    })
+    .catch((error) => {
+      // What should we do when we know the post request failed?
+      setErrorMessage(error.message);
+    });
+    }
+  
+
+
   return (
     <div>
       <CssBaseline />
@@ -224,7 +244,9 @@ const App = () => {
                     currentProperty={currentProperty}
                     currentPropertyId={currentPropertyId}
                     currentUser={currentUser}
+                    getLists={getLists}
                     currentUserLists={currentUserLists}
+                    addPropertyToList={addPropertyToList} 
                   />
                 </Route>
                 <Route path="/login">
@@ -240,7 +262,6 @@ const App = () => {
                 <ProtectedRoute authRequired={authRequired} path="/">
                   <Hello
                     setAuthRequired={setAuthRequired}
-                    getLists={getLists}
                   />
                 </ProtectedRoute>
               </Switch>
