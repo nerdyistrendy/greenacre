@@ -104,6 +104,8 @@ const App = () => {
           const r = await axios.get(`${API_URL_BASE}me`);
           setProfilePicture(r.data.picture);
           setCurrentUser(r.data)
+          localStorage.setItem('currentCurrentLocalStorage', JSON.stringify(r.data))
+          getLists()
         } catch (e) {
           if (e.response) {
             if (e.response.status === 401) {
@@ -139,12 +141,17 @@ const App = () => {
       });
   };
 
-  const getLists = (currentUser) => {
-    axios.get(`${API_URL_BASE}${currentUser.google_id}`)
+  const getLists = () => {
+    console.log(currentUser)
+    console.log(JSON.parse(localStorage.getItem('currentCurrentLocalStorage')).google_id);
+    axios.get(`${API_URL_BASE}${JSON.parse(localStorage.getItem('currentCurrentLocalStorage')).google_id}`)
     .then((response) => {
       const results = response.data["message"];
       setCurrentUserLists(results);
-      console.log(results);
+      localStorage.setItem('currentListsLocalStorage', JSON.stringify(results))
+
+      console.log(currentUserLists)
+
       return results;
     });
   };
@@ -154,17 +161,18 @@ const App = () => {
     console.log(currentUser)
     console.log(currentList)
     console.log(currentProperty)
-    .then((response) => {
-      console.log(response);
-      return(response)
+    alert('Property added!')
+    // .then((response) => {
+    //   console.log(response);
+    //   return(response)
       // const results = response.data["message"];
       // console.log(results);
-      setErrorMessage('');
-    })
-    .catch((error) => {
-      // What should we do when we know the post request failed?
-      setErrorMessage(error.message);
-    });
+    //   setErrorMessage('');
+    // })
+    // .catch((error) => {
+    //   // What should we do when we know the post request failed?
+    //   setErrorMessage(error.message);
+    // });
     }
   
 
