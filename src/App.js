@@ -104,8 +104,8 @@ const App = () => {
           const r = await axios.get(`${API_URL_BASE}me`);
           setProfilePicture(r.data.picture);
           setCurrentUser(r.data)
-          localStorage.setItem('currentCurrentLocalStorage', JSON.stringify(r.data))
-          getLists()
+          // localStorage.setItem('currentCurrentLocalStorage', JSON.stringify(r.data))
+          // getLists()
         } catch (e) {
           if (e.response) {
             if (e.response.status === 401) {
@@ -143,15 +143,12 @@ const App = () => {
 
   const getLists = () => {
     console.log(currentUser)
-    console.log(JSON.parse(localStorage.getItem('currentCurrentLocalStorage')).google_id);
-    axios.get(`${API_URL_BASE}${JSON.parse(localStorage.getItem('currentCurrentLocalStorage')).google_id}`)
+    console.log(JSON.parse(localStorage.getItem('currentUserIDLocalStorage')));
+    axios.get(`${API_URL_BASE}${JSON.parse(localStorage.getItem('currentUserIDLocalStorage'))}`)
     .then((response) => {
       const results = response.data["message"];
       setCurrentUserLists(results);
       localStorage.setItem('currentListsLocalStorage', JSON.stringify(results))
-
-      console.log(currentUserLists)
-
       return results;
     });
   };
@@ -265,6 +262,7 @@ const App = () => {
                     authRequired={authRequired}
                     setAuthRequired={setAuthRequired}
                     clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                    getLists={getLists}
                   />
                 </Route>
                 <ProtectedRoute authRequired={authRequired} path="/">

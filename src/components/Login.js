@@ -33,6 +33,9 @@ export function Login(props) {
             formData.set("id_token", d.tokenObj.id_token);
             try {
                 await axios.post(`${API_URL_BASE}me`, formData);
+                localStorage.setItem('currentUserIDLocalStorage', JSON.stringify(d.profileObj.googleId))
+                
+                props.getLists()
                 props.setAuthRequired(false);
             } catch(e) {
                 setLoginError(true);

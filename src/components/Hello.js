@@ -30,6 +30,7 @@ export function Hello(props) {
         // 'picture': current_user.profile_pic}
         setName(r.data.name);
         setSub(r.data.google_id);
+        
       } catch (e) {
         console.log(e);
         if (e.response) {
