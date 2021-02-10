@@ -32,7 +32,7 @@ function createData(name, action) {
 }
 
 const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
-const rows = lists.map(function (list) {
+const rows = lists[0].map(function (list) {
  
   return (createData(list, "actions"))
 })
@@ -40,7 +40,7 @@ const rows = lists.map(function (list) {
 
 const List = (props) => {
   const classes = useStyles();
-  const [text, setText] = useState(lists);
+  const [text, setText] = useState(lists[0]);
   const [focused, setFocused] = useState(false);
 
 
@@ -66,12 +66,12 @@ const List = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
+          {rows.map((row,index) => (
+            <TableRow key={row.index}>
               <TableCell component="th" scope="row" align="center" >   
-                  {/* TODO   edit and delete       */}
-                <Editable
-                  text={text}
+                  {/* TODO   edit and delete       */}      
+                <Editable      
+                  text={text[index]}                           
                   saveOnBlur={false}
                   editButton
                   editControlButtons
@@ -79,16 +79,10 @@ const List = (props) => {
                   cb={handleTextUpdate}
                   onEditCancel={handleEditCancel}
                   isFocused={focused}
-                />
+                 />  
               </TableCell>
               <TableCell align="center">
-          <button
-            onClick={() => {
-              setFocused(!focused);
-            }}
-          >        
-          </button>
-          <IconButton aria-label="delete"> <DeleteIcon onClick={() => props.deleteListCallback(props.list_id)} />
+                  <IconButton aria-label="delete"> <DeleteIcon onClick={() => props.deleteListCallback(props.list_id)} />
           </IconButton>
           </TableCell>
             </TableRow>
