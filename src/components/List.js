@@ -33,10 +33,8 @@ function createData(name, action) {
 
 const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
 const rows = lists[0].map(function (list) {
- 
   return (createData(list, "actions"))
 })
-
 
 const List = (props) => {
   const classes = useStyles();

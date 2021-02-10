@@ -319,7 +319,7 @@ def get_lists(investor_id):
     return {"message": (property_list_names, property_list_ids)}
 
 
-@ app.route("/<investor_id>/<list_name>", methods=['GET'])
+@app.route("/<investor_id>/<list_name>", methods=['GET'])
 def get_properties(investor_id, list_name):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
@@ -333,7 +333,7 @@ def get_properties(investor_id, list_name):
 
 
 # add property to a list
-@ app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
+@app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
 def add_property(investor_id, list_name, property_id):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
@@ -353,7 +353,7 @@ def add_property(investor_id, list_name, property_id):
         return {"message": f"{property_id} has been added to {list_name}."}
 
 
-@ app.errorhandler(404)
+@app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
 
