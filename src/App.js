@@ -142,7 +142,6 @@ const App = () => {
   };
 
   const getLists = () => {
-    console.log(currentUser)
     console.log(JSON.parse(localStorage.getItem('currentUserIDLocalStorage')));
     axios.get(`${API_URL_BASE}${JSON.parse(localStorage.getItem('currentUserIDLocalStorage'))}`)
     .then((response) => {
