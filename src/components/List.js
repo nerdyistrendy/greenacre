@@ -30,7 +30,7 @@ function createData(name, action) {
   return { name, action };
 }
 
-const rows = JSON.parse(localStorage.getItem('currentListsLocalStorage')).map(function (list, index) {
+const rows = JSON.parse(localStorage.getItem('currentListsLocalStorage'))[0].map(function (list, index) {
   return (createData(list, "actions"))
 })
 
@@ -83,7 +83,7 @@ const List = (props) => {
               setFocused(!focused);
             }}
           >        
-          </button><DeleteForeverIcon onClick={() => props.deleteListCallback(props.id, row.name)}/></TableCell>
+          </button><DeleteForeverIcon onClick={() => props.deleteListCallback(props.list_id)}/></TableCell>
             </TableRow>
           ))}
         </TableBody>

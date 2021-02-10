@@ -30,7 +30,7 @@ const AddToListForm = (props) => {
     <form ref={form}>
       <fieldset>
         <legend>Add to List</legend>
-        {JSON.parse(localStorage.getItem('currentListsLocalStorage')).map(function (list, index) {
+        {JSON.parse(localStorage.getItem('currentListsLocalStorage'))[0].map(function (list, index) {
           return (
             <Field
               key={index}
