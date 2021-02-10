@@ -11,6 +11,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Editable from 'react-editable-title'
 import "./List.scss";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,6 +37,17 @@ const rows = JSON.parse(localStorage.getItem('currentListsLocalStorage')).map(fu
 
 const List = (props) => {
   const classes = useStyles();
+  const [text, setText] = useState("Favorite");
+  const [focused, setFocused] = useState(false);
+
+
+  const handleEditCancel = () => {
+    console.log("First editable title`s edit has been canceled");
+  };
+
+  const handleTextUpdate = current => {
+    setText(current);
+  };
 
   return (
     <div>
@@ -52,10 +64,26 @@ const List = (props) => {
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.name}>
-              <TableCell component="th" scope="row" align="center" >
-                {row.name}
+              <TableCell component="th" scope="row" align="center" >   
+                  {/* TODO          */}
+                <Editable
+                  text={row.name}
+                  saveOnBlur={false}
+                  editButton
+                  editControlButtons
+                  placeholder="Type here"
+                  cb={handleTextUpdate}
+                  onEditCancel={handleEditCancel}
+                  isFocused={focused}
+                />
               </TableCell>
-              <TableCell align="center"><EditIcon /><DeleteForeverIcon /></TableCell>
+              <TableCell align="center">
+          <button
+            onClick={() => {
+              setFocused(!focused);
+            }}
+          >        
+          </button><DeleteForeverIcon onClick={() => props.deleteListCallback(props.id, row.name)}/></TableCell>
             </TableRow>
           ))}
         </TableBody>

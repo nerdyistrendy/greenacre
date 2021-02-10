@@ -270,6 +270,7 @@ class Me(Resource):
         logout_user()
         return "", HTTPStatus.NO_CONTENT
 
+
 @login_required
 @app.route('/')
 def index():
@@ -304,6 +305,8 @@ def get_property_id(address):
     return property_details_json
 
 # get lists
+
+
 @app.route("/<investor_id>", methods=['GET'])
 def get_lists(investor_id):
     investor = Investor.query.filter_by(id=investor_id).first()
@@ -312,10 +315,11 @@ def get_lists(investor_id):
     # results = [list for list in property_lists]
     property_list_names = [
         property_list.list_name for property_list in property_lists]
-    return {"message": property_list_names}
+    property_list_ids = [property_list.id for property_list in property_lists]
+    return {"message": (property_list_names, property_list_ids)}
 
 
-@app.route("/<investor_id>/<list_name>", methods=['GET'])
+@ app.route("/<investor_id>/<list_name>", methods=['GET'])
 def get_properties(investor_id, list_name):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
@@ -329,7 +333,7 @@ def get_properties(investor_id, list_name):
 
 
 # add property to a list
-@app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
+@ app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
 def add_property(investor_id, list_name, property_id):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
@@ -339,7 +343,7 @@ def add_property(investor_id, list_name, property_id):
     if new_property in property_list.investment_properties:
         return {"message": f"{property_id} has already in {list_name}."}
     elif not property_list or not new_property:
-        return {"message" : "list or property not found"}
+        return {"message": "list or property not found"}
     else:
         property_list.investment_properties.append(new_property)
         db.session.add(property_list)
@@ -349,7 +353,7 @@ def add_property(investor_id, list_name, property_id):
         return {"message": f"{property_id} has been added to {list_name}."}
 
 
-@app.errorhandler(404)
+@ app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
 
