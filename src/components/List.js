@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOM from "react-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -30,7 +31,8 @@ function createData(name, action) {
   return { name, action };
 }
 
-const rows = JSON.parse(localStorage.getItem('currentListsLocalStorage')).map(function (list) {
+const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
+const rows = lists.map(function (list) {
  
   return (createData(list, "actions"))
 })
@@ -38,7 +40,7 @@ const rows = JSON.parse(localStorage.getItem('currentListsLocalStorage')).map(fu
 
 const List = (props) => {
   const classes = useStyles();
-  const [text, setText] = useState("Favorite");
+  const [text, setText] = useState(lists);
   const [focused, setFocused] = useState(false);
 
 
@@ -51,6 +53,7 @@ const List = (props) => {
   };
 
   return (
+    <React.Fragment>
     <div>
 
       <h1> My Lists</h1>
@@ -68,7 +71,7 @@ const List = (props) => {
               <TableCell component="th" scope="row" align="center" >   
                   {/* TODO   edit and delete       */}
                 <Editable
-                  text={row.name}
+                  text={text}
                   saveOnBlur={false}
                   editButton
                   editControlButtons
@@ -100,6 +103,7 @@ const List = (props) => {
       </Fab>  
       </div>
     </div>
+    </React.Fragment>
   )
 }
 
