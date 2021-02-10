@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -30,7 +30,8 @@ function createData(name, action) {
   return { name, action };
 }
 
-const rows = JSON.parse(localStorage.getItem('currentListsLocalStorage'))[0].map(function (list, index) {
+const rows = JSON.parse(localStorage.getItem('currentListsLocalStorage')).map(function (list) {
+ 
   return (createData(list, "actions"))
 })
 
@@ -65,7 +66,7 @@ const List = (props) => {
           {rows.map((row) => (
             <TableRow key={row.name}>
               <TableCell component="th" scope="row" align="center" >   
-                  {/* TODO          */}
+                  {/* TODO   edit and delete       */}
                 <Editable
                   text={row.name}
                   saveOnBlur={false}
@@ -83,7 +84,10 @@ const List = (props) => {
               setFocused(!focused);
             }}
           >        
-          </button><DeleteForeverIcon onClick={() => props.deleteListCallback(props.list_id)}/></TableCell>
+          </button>
+          <IconButton aria-label="delete"> <DeleteIcon onClick={() => props.deleteListCallback(props.list_id)} />
+          </IconButton>
+          </TableCell>
             </TableRow>
           ))}
         </TableBody>

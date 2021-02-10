@@ -173,6 +173,9 @@ const App = () => {
     // });
     }
   
+  const deleteListCallback =() => {
+    return "TODO"
+  }
 
 
   return (
@@ -239,7 +242,7 @@ const App = () => {
                   />
                 </Route>
                 <Route path="/list">
-                  <List />
+                  <List deleteListCallback={deleteListCallback}/>
                 </Route>
                 <Route path="/details">
                   <Details currentProperty={currentProperty} />
