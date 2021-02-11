@@ -35,7 +35,7 @@ export function Login(props) {
                 await axios.post(`${API_URL_BASE}me`, formData);
                 localStorage.setItem('currentUserIDLocalStorage', JSON.stringify(d.profileObj.googleId))
                 
-                props.getLists()
+                // props.getLists()
                 props.setAuthRequired(false);
             } catch(e) {
                 setLoginError(true);

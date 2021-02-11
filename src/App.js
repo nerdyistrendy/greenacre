@@ -177,6 +177,19 @@ const App = () => {
     return "TODO"
   }
 
+  // const getProperties =() => {
+  //   axios.get(`${API_URL_BASE}details/${response}`)
+  //   .then((response) => {
+  //     const results = response.data;
+  //     setCurrentProperty(results);
+  //     console.log(results);
+  //   });
+  //   .catch((error) => {
+  //   setErrorMessage(error.message);
+  //   });
+  // }
+
+
 
   return (
     <div>

@@ -319,10 +319,10 @@ def get_lists(investor_id):
     return {"message": (property_list_names, property_list_ids)}
 
 
-@app.route("/<investor_id>/<list_name>", methods=['GET'])
-def get_properties(investor_id, list_name):
+@app.route("/investor_list/<list_id>", methods=['GET'])
+def get_properties(list_id):
     property_list = InvestmentList.query.filter_by(
-        list_name=list_name, investor_id=investor_id).first()
+        id=list_id).first()
     properties = property_list.investment_properties
     results = [
         {

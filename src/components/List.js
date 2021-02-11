@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import ReactDOM from "react-dom";
-import { makeStyles } from '@material-ui/core/styles';
+import {
+  BrowserRouter as Router,
+  HashRouter,
+  Switch,
+  Route,
+  Link,
+} from "react-router-dom";import { makeStyles } from '@material-ui/core/styles';
+import PropertyList from './PropertyList';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
@@ -36,6 +42,10 @@ const rows = lists[0].map(function (list) {
   return (createData(list, "actions"))
 })
 
+const listIds = lists[1]
+console.log(listIds)
+
+
 const List = (props) => {
   const classes = useStyles();
   const [text, setText] = useState(lists[0]);
@@ -65,11 +75,14 @@ const List = (props) => {
         </TableHead>
         <TableBody>
           {rows.map((row,index) => (
-            <TableRow key={row.index}>
+            <TableRow key={index} >
               <TableCell component="th" scope="row" align="center" >   
-                  {/* TODO   edit and delete       */}      
+                  {/* TODO   edit and delete       */}
+                <Router path="/list/:listId" component={PropertyList}>
+                  <Link to={`/list/${listIds[index]}`}>{text[index]}</Link>
+                </Router >                 
                 <Editable      
-                  text={text[index]}                           
+                  //  text={text[index]}                   
                   saveOnBlur={false}
                   editButton
                   editControlButtons
