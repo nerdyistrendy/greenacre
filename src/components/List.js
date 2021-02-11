@@ -38,8 +38,6 @@ function createData(name, action) {
 }
 
 
-
-
 const List = (props) => {
   const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
 
@@ -80,9 +78,8 @@ console.log(listIds)
             <TableRow key={index} >
               <TableCell component="th" scope="row" align="center" >   
                   {/* TODO   edit and delete       */}
-                <Router path="/list/:listId" component={PropertyList}>
                   <Link to={`/list/${listIds[index]}`}>{text[index]}</Link>
-                </Router >                 
+                  {/* <PropertyList listId = {listIds[index]}/> */}
                 <Editable      
                   //  text={text[index]}                   
                   saveOnBlur={false}
@@ -110,6 +107,7 @@ console.log(listIds)
       </Fab>  
       </div>
     </div>
+    
     </React.Fragment>
   )
 }

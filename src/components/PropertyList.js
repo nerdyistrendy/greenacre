@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import Details from './Details';
+import { useParams } from "react-router-dom";
 
-const PropertyList = ({ match, location }) => {
-  
-  
+import List from './List';
+import { Link, BrowserRouter as Router, Route } from "react-router-dom";
+
+const PropertyList = () => {
+  const { listId } = useParams();
+
+
   return (
     <>
       <p>
         <strong>Match Props: </strong>
-        <code>{JSON.stringify(match, null, 2)}</code>
       </p>
-      <p>
-        <strong>Location Props: </strong>
-        <code>{JSON.stringify(location, null, 2)}</code>
-      </p>
-    </>
+</>
   );
 }
 

@@ -32,8 +32,8 @@ import Search from "./components/Search";
 import List from "./components/List";
 import AutoComplete from "./components/AutoComplete";
 import Details from "./components/Details";
+import PropertyList from './components/PropertyList';
 import HomeIcon from '@material-ui/icons/Home';
-// import Login from './components/Login';
 import Logout from "./components/Logout";
 import LoginHooks from "./components/LoginHooks";
 import LogoutHooks from "./components/LogoutHooks";
@@ -253,6 +253,9 @@ const App = () => {
                     currentProperty={currentProperty}
                   />
                 </Route>
+                <Route path="/list/:listId" component={PropertyList}>
+                  <PropertyList />
+                </Route>
                 <Route path="/list">
                   <List deleteListCallback={deleteListCallback}/>
                 </Route>
@@ -284,7 +287,7 @@ const App = () => {
                 <ProtectedRoute authRequired={authRequired} path="/">
                   <Hello
                     setAuthRequired={setAuthRequired}
-                  />
+                  />  
                 </ProtectedRoute>
               </Switch>
             </section>
