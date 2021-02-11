@@ -32,6 +32,7 @@ import Search from "./components/Search";
 import List from "./components/List";
 import AutoComplete from "./components/AutoComplete";
 import Details from "./components/Details";
+import HomeIcon from '@material-ui/icons/Home';
 // import Login from './components/Login';
 import Logout from "./components/Logout";
 import LoginHooks from "./components/LoginHooks";
@@ -194,14 +195,14 @@ const App = () => {
       <CssBaseline />
       <Router>
         <div>
-          <AppBar position="static" style={{ background: "#8bc34a" }}>
+          <AppBar position="static" style={{ background: "#8bc34a" }} >
             <Toolbar>
               <Typography
                 color="inherit"
                 variant="h6"
                 className={classes.title}
               >
-                Greenacre Hub
+                <Link to="/"><HomeIcon fontSize='large' color="action"/></Link> Greenacre Hub
               </Typography>
               <ProfileButton
                 handleLogout={handleLogout}
