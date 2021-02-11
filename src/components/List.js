@@ -37,20 +37,22 @@ function createData(name, action) {
   return { name, action };
 }
 
-const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
-const rows = lists[0].map(function (list) {
+
+
+
+const List = (props) => {
+  const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
+
+  const classes = useStyles();
+  const [text, setText] = useState(lists[0]);
+  const [focused, setFocused] = useState(false);
+
+  const rows = lists[0].map(function (list) {
   return (createData(list, "actions"))
 })
 
 const listIds = lists[1]
 console.log(listIds)
-
-
-const List = (props) => {
-  const classes = useStyles();
-  const [text, setText] = useState(lists[0]);
-  const [focused, setFocused] = useState(false);
-
 
   const handleEditCancel = () => {
     console.log("First editable title`s edit has been canceled");

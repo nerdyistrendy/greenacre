@@ -189,8 +189,6 @@ const App = () => {
   //   });
   // }
 
-
-
   return (
     <div>
       <CssBaseline />
@@ -236,7 +234,7 @@ const App = () => {
                   <Link to="/">Home</Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Link to="/list">My List</Link>
+                  <Link to="/list"  >My Lists</Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                   <Link to="/AutoComplete">Search</Link>
