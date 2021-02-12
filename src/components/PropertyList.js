@@ -1,61 +1,97 @@
 import React, { useState } from 'react';
 import { useParams } from "react-router-dom";
-import { DataGrid } from '@material-ui/data-grid';
+import DataTable from "react-data-table-component";
+import Card from "@material-ui/core/Card";
+import Checkbox from "@material-ui/core/Checkbox";
+import SortIcon from "@material-ui/icons/ArrowDownward";
+import movies from "./movies";
+import TextField from "@material-ui/core/TextField";
+import "./styles.scss";
 
 import List from './List';
 import { Link, BrowserRouter as Router, Route } from "react-router-dom";
 
+
+
+
+
 const PropertyList = () => {
   const { listId } = useParams();
-  const columns = [
-
-    { field: 'thumbnail', headerName: 'Thumbnail', width: 170 },
-    { field: 'address', headerName: 'Address', width: 170 },
-    { field: 'details', headerName: 'Details', width: 130 },
-    {
-      field: 'rent',
-      headerName: 'Rent',
-      sortable: true,
-      width: 130,
-    },
-    {
-      field: 'rentRatio',
-      headerName: 'Price-to-Rent%',
-      sortable: true,
-      width: 180,
-    },
-
-    { field: 'lastName', headerName: 'Last name', width: 130 },
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 90,
-    },
-    {
-      field: 'note',
-      headerName: 'Note',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
-    },
-
-  ];
-
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-
-  ];
   
+  const [rows, setRows] = React.useState(movies);
+  const [rent, setRent] = React.useState("");
+  const [note, setNote] = React.useState("");
+  const columns = React.useMemo(() => {
+    const handleAction = event => setRent(event.target.value);
+    const handleAction2 = event => setNote(event.target.value);
+    return [
+      {
+        name: "Thumbnail",
+        selector: "Thumbnail",
+        sortable: false
+      },
+      {
+        name: "Address",
+        selector: "address",
+        sortable: false,
+      },
+      {
+        name: "Details",
+        selector: "details",
+        sortable: false,
+      },
+      {
+        name: "Rent",
+        selector: "rent",
+        sortable: true,
+        cell: () => (
+          <TextField variant="outlined" value={rent} onChange={handleAction} />
+        )
+      },
+      {
+        name: "Price-to-Rent%",
+        selector: "rentRatio",
+        sortable: true
+      },
+      {
+        name: "Note",
+        selector: "note",
+        sortable: false,
+        cell: () => (
+          <TextField variant="outlined" value={note} onChange={handleAction2} />
+        )
+      },
+
+    ];
+  }, [rent, note, setRent, setNote]);
+
+
+  const handleSelected = row => {
+    setRows(
+      movies.map(m => {
+        // if (m.id === row) {
+        return { ...m, expanded: true };
+        // }
+
+        // return m;
+      })
+    );
+  };
 
   return (
-    <>
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5} checkboxSelection />
+    <div className="PropertyList">
+      <DataTable
+        title="Properties"
+        columns={columns}
+        data={rows}
+        defaultSortField="title"
+        pagination
+        selectableRows
+        expandableRows
+        defaultExpandedField="expanded"
+        onRowClicked={handleSelected}
+      />
     </div>
-  </>
   );
 }
 
