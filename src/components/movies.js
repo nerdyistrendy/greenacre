@@ -4,7 +4,8 @@ export default [
   {
     thumbnail: "",
     address: "Beetlejuice",
-    details: "1988",
+    details: "2b2b, 1984sqft",
+    price: 760000,
     runtime: "92",
     genres: ["Comedy", "Fantasy"],
     director: "Tim Burton",
@@ -17,8 +18,10 @@ export default [
   {
     thumbnail: 2,
     address: "The Cotton Club",
-    details: "1984",
+    details: "2b2b, 1984sqft",
     runtime: "127",
+    price: 790000,
+
     genres: ["Crime", "Drama", "Music"],
     director: "Francis Ford Coppola",
     actors: "Richard Gere, Gregory Hines, Diane Lane, Lonette McKee",
@@ -30,8 +33,10 @@ export default [
   {
     thumbnail: 3,
     address: "The Shawshank Redemption",
-    details: "1994",
+    details: "2b1b, 2284sqft",
     runtime: "142",
+    price: 960000,
+
     genres: ["Crime", "Drama"],
     director: "Frank Darabont",
     actors: "Tim Robbins, Morgan Freeman, Bob Gunton, William Sadler",
@@ -43,8 +48,9 @@ export default [
   {
     thumbnail: 4,
     address: "Crocodile Dundee",
-    details: "1986",
+    details: "2b1b, 984sqft",
     runtime: "97",
+    price: 60000,
     genres: ["Adventure", "Comedy"],
     director: "Peter Faiman",
     actors: "Paul Hogan, Linda Kozlowski, John Meillon, David Gulpilil",
@@ -58,6 +64,7 @@ export default [
     address: "Valkyrie",
     details: "2008",
     runtime: "121",
+    price: 1760000,
     genres: ["Drama", "History", "Thriller"],
     director: "Bryan Singer",
     actors: "Tom Cruise, Kenneth Branagh, Bill Nighy, Tom Wilkinson",

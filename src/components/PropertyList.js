@@ -13,11 +13,33 @@ import memoize from 'memoize-one';
 import CustomMaterialMenu from './CustomMaterialMenu';
 import movies from "./movies";
 import TextField from "@material-ui/core/TextField";
+import { createTheme } from 'react-data-table-component';
 import "./styles.scss";
 
 import List from './List';
 import { Link, BrowserRouter as Router, Route } from "react-router-dom";
+createTheme('green', {
+  // text: {
+  //   primary: '#268bd2',
+  //   secondary: '#2aa198',
+  // },
+  // background: {
+  //   default: '#002b36',
+  // },
+  // context: {
+  //   background: '#cb4b16',
+  //   text: '#FFFFFF',
+  // },
+  // divider: {
+  //   default: '#073642',
+  // },
+  // action: {
+  //   button: 'rgba(0,0,0,.54)',
+  //   hover: 'rgba(0,0,0,.08)',
+  //   disabled: 'rgba(0,0,0,.12)',
+  // },
 
+});
 
 const sortIcon = <ArrowDownward />;
 const selectProps = { indeterminate: isIndeterminate => isIndeterminate };
@@ -25,7 +47,7 @@ const actions = (
   <IconButton
     color="primary"
   >
-    <Add />
+    <Link to="/AutoComplete"><Add /></Link>
   </IconButton>
 );
 const contextActions = memoize(deleteHandler => (
@@ -35,6 +57,8 @@ const contextActions = memoize(deleteHandler => (
   >
     <Delete />
   </IconButton>
+
+
 ));
 
 
@@ -65,6 +89,11 @@ const PropertyList = () => {
         name: "Address",
         selector: "address",
         sortable: false,
+      },
+      {
+        name: "Price",
+        selector: "price",
+        sortable: true,
       },
       {
         name: "Details",
@@ -137,6 +166,8 @@ const PropertyList = () => {
 
 
   return (
+    <Card style={{ height: '100%' }}>
+
     <div className="PropertyList">
       <DataTable
         title="Properties"
@@ -148,14 +179,18 @@ const PropertyList = () => {
         actions={actions}
         contextActions={contextActions(deleteAll)}
         sortIcon={sortIcon}
-        selectableRowsComponent={Checkbox}
+        selectableRowsComponent={Checkbox} 
         selectableRowsComponentProps={selectProps}
         onSelectedRowsChange={handleChange}
         clearSelectedRows={toggleCleared}
         onRowClicked={handleRowClicked}
         pagination
+        expandableRows
+        theme="green"
+
       />
     </div>
+    </Card>
   );
 }
 
