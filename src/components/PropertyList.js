@@ -16,8 +16,12 @@ import TextField from "@material-ui/core/TextField";
 import { createTheme } from 'react-data-table-component';
 import "./styles.scss";
 
+import axios from "axios";
 import List from './List';
 import { Link, BrowserRouter as Router, Route } from "react-router-dom";
+
+const API_URL_BASE = "/";
+
 createTheme('green', {
   // text: {
   //   primary: '#268bd2',
@@ -64,7 +68,31 @@ const contextActions = memoize(deleteHandler => (
 
 const PropertyList = () => {
   const { listId } = useParams();
-  const [rows, setRows] = React.useState(movies);
+  const property_list = (listId) => {
+    const res  = () => {
+      axios.get(`${API_URL_BASE}investor_list/${listId}`).then((response) => {
+      const results = response.data["message"];
+      console.log(listId);
+      console.log(typeof(results));
+      const p_list = eval(results);
+      
+      console.log(p_list)
+      const pr_list =  p_list.map(p => eval({
+        thumbnail: "",
+        address: p.address,
+        details: "2b2b, 1984sqft",
+        price: p.price,
+      }));
+      console.log(pr_list);
+      setRows(pr_list);
+      return pr_list;
+    }); 
+    }
+    console.log(res)
+    return res;
+  }
+
+  const [rows, setRows] = React.useState(property_list(listId));
   const [rent, setRent] = React.useState("");
   const [note, setNote] = React.useState("");
   const [selectedRows, setSelectedRows] = React.useState([]);
