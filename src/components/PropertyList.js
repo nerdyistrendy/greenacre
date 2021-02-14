@@ -155,12 +155,11 @@ const PropertyList = () => {
 
   const handleSelected = row => {
     setRows(
-      movies.map(m => {
-        // if (m.id === row) {
+      rows.map((m) => {
+        if (m === row) {
         return { ...m, expanded: true };
-        // }
-
-        // return m;
+        }
+        return m;
       })
     );
   };
@@ -211,9 +210,10 @@ const PropertyList = () => {
         selectableRowsComponentProps={selectProps}
         onSelectedRowsChange={handleChange}
         clearSelectedRows={toggleCleared}
-        onRowClicked={handleRowClicked}
+        onRowClicked={handleSelected}
         pagination
         expandableRows
+        defaultExpandedField="expanded"
         theme="green"
 
       />
