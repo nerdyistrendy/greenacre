@@ -1,4 +1,4 @@
-import React  from 'react'
+import React, {useEffect}  from 'react'
 import { useParams } from "react-router-dom";
 
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -8,8 +8,8 @@ import axios from "axios";
 
 const PropertyList = () => {
   const { listId } = useParams();
-  const property_list = (listId) => {
-    
+  const [isLoaded, setIsLoaded] = React.useState(false)
+  useEffect(() => {    
       axios.get(`/investor_list/${listId}`).then((response) => {
       const results = response.data["message"];
       console.log(listId);
@@ -25,8 +25,9 @@ const PropertyList = () => {
       }));
       console.log(pr_list);
       setData(pr_list);
+      setIsLoaded(true);
     }); 
-  }
+   }, []);
 
 
   const columns = React.useMemo(
@@ -62,8 +63,7 @@ const PropertyList = () => {
     ],
     []
   )
-
-  const [data, setData] = React.useState(property_list(listId))
+  const [data, setData] = React.useState([])
   const [skipPageReset, setSkipPageReset] = React.useState(false)
 
   // We need to keep the table from resetting the pageIndex when we
@@ -91,13 +91,13 @@ const PropertyList = () => {
   return (
     <div>
       <CssBaseline />
-      <EnhancedTable
+      {isLoaded ? <EnhancedTable
         columns={columns}
         data={data}
         setData={setData}
         updateMyData={updateMyData}
         skipPageReset={skipPageReset}
-      />
+      /> : "Loading"}
     </div>
   )
 }
