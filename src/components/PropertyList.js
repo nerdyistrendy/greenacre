@@ -1,76 +1,16 @@
-import React, { useState, PureComponent } from 'react';
+import React  from 'react'
 import { useParams } from "react-router-dom";
-import DataTable from "react-data-table-component";
-import differenceBy from 'lodash/differenceBy';
-import Card from '@material-ui/core/Card';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Checkbox from '@material-ui/core/Checkbox';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Delete from '@material-ui/icons/Delete';
-import Add from '@material-ui/icons/Add';
-import memoize from 'memoize-one';
-import CustomMaterialMenu from './CustomMaterialMenu';
-import movies from "./movies";
-import TextField from "@material-ui/core/TextField";
-import { createTheme } from 'react-data-table-component';
-import "./styles.scss";
 
+import CssBaseline from '@material-ui/core/CssBaseline'
+import EnhancedTable from './EnhancedTable'
+import makeData from './makeData'
 import axios from "axios";
-import List from './List';
-import { Link, BrowserRouter as Router, Route } from "react-router-dom";
-
-const API_URL_BASE = "/";
-
-createTheme('green', {
-  // text: {
-  //   primary: '#268bd2',
-  //   secondary: '#2aa198',
-  // },
-  // background: {
-  //   default: '#002b36',
-  // },
-  // context: {
-  //   background: '#cb4b16',
-  //   text: '#FFFFFF',
-  // },
-  // divider: {
-  //   default: '#073642',
-  // },
-  // action: {
-  //   button: 'rgba(0,0,0,.54)',
-  //   hover: 'rgba(0,0,0,.08)',
-  //   disabled: 'rgba(0,0,0,.12)',
-  // },
-
-});
-
-const sortIcon = <ArrowDownward />;
-const selectProps = { indeterminate: isIndeterminate => isIndeterminate };
-const actions = (
-  <IconButton
-    color="primary"
-  >
-    <Link to="/AutoComplete"><Add /></Link>
-  </IconButton>
-);
-const contextActions = memoize(deleteHandler => (
-  <IconButton
-    color="secondary"
-    onClick={deleteHandler}
-  >
-    <Delete />
-  </IconButton>
-
-
-));
-
 
 const PropertyList = () => {
   const { listId } = useParams();
   const property_list = (listId) => {
     const res  = () => {
-      axios.get(`${API_URL_BASE}investor_list/${listId}`).then((response) => {
+      axios.get(`/investor_list/${listId}`).then((response) => {
       const results = response.data["message"];
       console.log(listId);
       console.log(typeof(results));
@@ -84,7 +24,7 @@ const PropertyList = () => {
         price: p.price,
       }));
       console.log(pr_list);
-      setRows(pr_list);
+      setData(pr_list);
       return pr_list;
     }); 
     }
@@ -92,135 +32,78 @@ const PropertyList = () => {
     return res;
   }
 
-  const [rows, setRows] = React.useState(property_list(listId));
-  const [rent, setRent] = React.useState("");
-  const [note, setNote] = React.useState("");
-  const [selectedRows, setSelectedRows] = React.useState([]);
-  const [toggleCleared, setToggleCleared] = React.useState(false);
 
-  const columns = React.useMemo((deleteHandler) => {
-    const handleAction = event => setRent(event.target.value);
-    const handleAction2 = event => setNote(event.target.value);
-    return [
+  const columns = React.useMemo(
+    () => [
       {
-        cell: row => <CustomMaterialMenu row={row} onDeleteRow={deleteHandler} />,
-        allowOverflow: true,
-        button: true,
-        width: '56px', // custom width for icon button
+        Header: "Thumbnail",
+        accessor: "Thumbnail",
       },
       {
-        name: "Thumbnail",
-        selector: "Thumbnail",
-        sortable: false
+        Header: "Address",
+        accessor: "address",
       },
       {
-        name: "Address",
-        selector: "address",
-        sortable: false,
+        Header: "Price",
+        accessor: "price",
       },
       {
-        name: "Price",
-        selector: "price",
-        sortable: true,
+        Header: "Details",
+        accessor: "details",
       },
       {
-        name: "Details",
-        selector: "details",
-        sortable: false,
+        Header: "Rent",
+        accessor: "rent",
       },
       {
-        name: "Rent",
-        selector: "rent",
-        sortable: true,
-        cell: () => (
-          <TextField variant="outlined" value={rent} onChange={handleAction} />
-        )
+        Header: "Price-to-Rent%",
+        accessor: "rentRatio",
       },
       {
-        name: "Price-to-Rent%",
-        selector: "rentRatio",
-        sortable: true
+        Header: "Note",
+        accessor: "note",
       },
-      {
-        name: "Note",
-        selector: "note",
-        sortable: false,
-        cell: () => (
-          <TextField variant="outlined" value={note} onChange={handleAction2} />
-        )
-      },
-    ]
-  }, [rent, note, setRent, setNote]);
+    ],
+    []
+  )
 
+  const [data, setData] = React.useState(  makeData(20))
+  const [skipPageReset, setSkipPageReset] = React.useState(false)
 
-  const handleSelected = row => {
-    setRows(
-      rows.map((m) => {
-        if (m === row) {
-        return { ...m, expanded: true };
+  // We need to keep the table from resetting the pageIndex when we
+  // Update data. So we can keep track of that flag with a ref.
+
+  // When our cell renderer calls updateMyData, we'll use
+  // the rowIndex, columnId and new value to update the
+  // original data
+  const updateMyData = (rowIndex, columnId, value) => {
+    // We also turn on the flag to not reset the page
+    setSkipPageReset(true)
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          }
         }
-        return m;
+        return row
       })
-    );
-  };
-  
-  const handleChange = () => {
-     setSelectedRows(selectedRows) };
-
-
-  const handleRowClicked = row => {
-    
-    console.log(`${row.name} was clicked!`);
+    )
   }
-
-  const deleteAll = () => {
-    const rows = selectedRows.map(r => r.name);
-    
-    if (window.confirm(`Are you sure you want to delete:\r ${rows}?`)) {
-      setRows(differenceBy(rows, selectedRows, 'name'));
-      setToggleCleared(!toggleCleared);
-    }
-  }
-
-  const deleteOne = row => {
-    
-    if (window.confirm(`Are you sure you want to delete:\r ${row.name}?`)) {
-      const index = rows.findIndex(r => r === row);
-      setToggleCleared(!toggleCleared);
-      setRows([...rows.slice(0, index), ...rows.slice(index + 1)]);
-    }
-  }
-
 
   return (
-    <Card style={{ height: '100%' }}>
-
-    <div className="PropertyList">
-      <DataTable
-        title="Properties"
+    <div>
+      <CssBaseline />
+      <EnhancedTable
         columns={columns}
-        data={rows}
-        defaultSortField="title"
-        selectableRows
-        highlightOnHover
-        actions={actions}
-        contextActions={contextActions(deleteAll)}
-        sortIcon={sortIcon}
-        selectableRowsComponent={Checkbox} 
-        selectableRowsComponentProps={selectProps}
-        onSelectedRowsChange={handleChange}
-        clearSelectedRows={toggleCleared}
-        onRowClicked={handleSelected}
-        pagination
-        expandableRows
-        defaultExpandedField="expanded"
-        theme="green"
-
+        data={data}
+        setData={setData}
+        updateMyData={updateMyData}
+        skipPageReset={skipPageReset}
       />
     </div>
-    </Card>
-  );
+  )
 }
 
-
-export default PropertyList;
+export default PropertyList
