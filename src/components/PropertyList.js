@@ -9,7 +9,7 @@ import axios from "axios";
 const PropertyList = () => {
   const { listId } = useParams();
   const property_list = (listId) => {
-    const res  = () => {
+    
       axios.get(`/investor_list/${listId}`).then((response) => {
       const results = response.data["message"];
       console.log(listId);
@@ -25,11 +25,7 @@ const PropertyList = () => {
       }));
       console.log(pr_list);
       setData(pr_list);
-      return pr_list;
     }); 
-    }
-    console.log(res)
-    return res;
   }
 
 
@@ -67,7 +63,7 @@ const PropertyList = () => {
     []
   )
 
-  const [data, setData] = React.useState(  makeData(20))
+  const [data, setData] = React.useState(property_list(listId))
   const [skipPageReset, setSkipPageReset] = React.useState(false)
 
   // We need to keep the table from resetting the pageIndex when we
