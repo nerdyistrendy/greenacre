@@ -6,27 +6,8 @@ import EnhancedTable from './EnhancedTable'
 import makeData from './makeData'
 import axios from "axios";
 
-const PropertyList = () => {
+const PropertyList = (props) => {
   const { listId } = useParams();
-  const property_list = (listId) => {
-    
-      axios.get(`/investor_list/${listId}`).then((response) => {
-      const results = response.data["message"];
-      console.log(listId);
-      console.log(typeof(results));
-      const p_list = eval(results);
-      
-      console.log(p_list)
-      const pr_list =  p_list.map(p => eval({
-        thumbnail: "",
-        address: p.address,
-        details: "2b2b, 1984sqft",
-        price: p.price,
-      }));
-      console.log(pr_list);
-      setData(pr_list);
-    }); 
-  }
 
 
   const columns = React.useMemo(
@@ -63,7 +44,7 @@ const PropertyList = () => {
     []
   )
 
-  const [data, setData] = React.useState(property_list(listId))
+  const [data, setData] = React.useState(props.data)
   const [skipPageReset, setSkipPageReset] = React.useState(false)
 
   // We need to keep the table from resetting the pageIndex when we

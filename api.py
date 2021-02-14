@@ -287,12 +287,15 @@ def get_property_details(property_id) -> json:
     else:
         app.logger.info("calling realtor API to fetch property details ...")
         property_details = realtor_GW.show_details(property_id)
+
         property_details_str = property_details[0].decode('UTF-8')
     # add property to db investment_properties if not already in it
         property_details_json = json.loads(property_details_str)
+        print(property_details_json)
+
         # add property to table investment_properties
         new_property = InvestmentProperty(
-            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+property_details_json["properties"][0]["address"]["city"], price=property_details_json.meta.tracking_params.listingPrice, details_str=property_details_str)
+            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+property_details_json["properties"][0]["address"]["city"], price=property_details_json["meta"]["tracking_params"]["listingPrice"], details_str=property_details_str)
         db.session.add(new_property)
         db.session.commit()
         return property_details_json

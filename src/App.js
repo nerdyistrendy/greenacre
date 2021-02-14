@@ -66,6 +66,7 @@ const App = () => {
   const [currentProperty, setCurrentProperty] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUserLists, setCurrentUserLists] = useState([]);
+  const [data, setData] = React.useState([])
 
   const classes = useStyles();
 
@@ -190,6 +191,26 @@ const App = () => {
   //   });
   // }
 
+  const property_list = (listId) => {
+    
+    axios.get(`/investor_list/${listId}`).then((response) => {
+    const results = response.data["message"];
+    console.log(listId);
+    console.log(typeof(results));
+    const p_list = eval(results);
+    
+    console.log(p_list)
+    const pr_list =  p_list.map(p => eval({
+      thumbnail: "",
+      address: p.address,
+      details: "2b2b, 1984sqft",
+      price: p.price,
+    }));
+    console.log(pr_list);
+    setData(pr_list);
+  }); 
+}
+
   return (
     <div>
       <CssBaseline />
@@ -254,10 +275,10 @@ const App = () => {
                   />
                 </Route>
                 <Route path="/list/:listId" component={PropertyList}>
-                  <PropertyList />
+                  <PropertyList  data={data}/>
                 </Route>
                 <Route path="/list">
-                  <List deleteListCallback={deleteListCallback}/>
+                  <List deleteListCallback={deleteListCallback} property_list={property_list}/>
                 </Route>
                 <Route path="/details">
                   <Details currentProperty={currentProperty} />

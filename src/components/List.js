@@ -49,8 +49,11 @@ const List = (props) => {
   return (createData(list, "actions"))
 })
 
-const listIds = lists[1]
-console.log(listIds)
+  const onClick = (id) => {
+    props.property_list(id)
+  }
+  const listIds = lists[1]
+  console.log(listIds)
 
   const handleEditCancel = () => {
     console.log("First editable title`s edit has been canceled");
@@ -78,7 +81,7 @@ console.log(listIds)
             <TableRow key={index} >
               <TableCell component="th" scope="row" align="center" >   
                   {/* TODO   edit and delete       */}
-                  <Link to={`/list/${listIds[index]}`}>{text[index]}</Link>
+                  <Link onClick={() =>onClick(listIds[index])} to={`/list/${listIds[index]}`}>{text[index]}</Link>
                   {/* <PropertyList listId = {listIds[index]}/> */}
                 <Editable      
                   //  text={text[index]}                   
