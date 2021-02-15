@@ -131,18 +131,25 @@ class InvestmentProperty(db.Model):
     def __repr__(self):
         return f"<Investment Property {self.address}>"
 
+
 class InvestorProperty(db.Model):
     __tablename__ = 'investor_properties'
 
     id = db.Column(db.Integer, primary_key=True)
+    rent = db.Column(db.Integer)
     capRatio = db.Column(db.Float)
     note = db.Column(db.Text)
     investor_id = db.Column(db.Text, db.ForeignKey('investors.id'))
+    property_id = db.Column(db.Text)
 
-    def __init__(self, capRatio, note, investor_id):
+    def __init__(self, rent, capRatio, note, investor_id, property_id):
+        self.rent = rent
         self.capRatio = capRatio
         self.note = note
         self.investor_id = investor_id
+        self.property_id = property_id
+
+
 class UserManager(object):
     """Simple user manager class.
     Replace with something that talks to your database instead.
@@ -323,6 +330,7 @@ def get_properties(list_id):
     properties = property_list.investment_properties
     results = [
         {
+            "property_id": property.property_id,
             "address": property.address,
             "price": property.price,
             "property_type": json.loads(property.details_str)["properties"][0]["prop_type"],
@@ -350,6 +358,33 @@ def add_property(investor_id, list_name, property_id):
         # print(property_list.investment_properties)
         # print(new_property.investment_lists)
         return {"message": f"{property_id} has been added to {list_name}."}
+
+
+# add notes to investor_properties
+@app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
+def set_investor_property_info(investor_id, property_id, column, data):
+    investor_property = InvestorProperty.query.filter_by(
+        investor_id=investor_id, property_id=property_id).first()
+    if investor_property:
+        if column == "rent":
+            investor_property.rent = int(data)
+        elif column == "capRatio":
+            investor_property.capRatio = float(data)
+        elif column == "note":
+            investor_property.note = data
+    else:
+        if column == "rent":
+            investor_property = InvestorProperty(
+                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio="", note="")
+        elif column == "capRatio":
+            investor_property = InvestorProperty(
+                investor_id=investor_id, property_id=property_id, rent=None, capRatio=None, note="")
+        elif column == "note":
+            investor_property = InvestorProperty(
+                investor_id=investor_id, property_id=property_id, rent=None, capRatio=None, note=data)
+    db.session.add(investor_property)
+    db.session.commit()
+    return {"message": f"{column} has been added/updated to/in {investor_id}-{property_id}."}
 
 
 @app.errorhandler(404)

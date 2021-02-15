@@ -23,6 +23,7 @@ const PropertyList = () => {
           type: p.property_type,
           details: p.details,
           price: p.price,
+          property_id: p.property_id,
         })
       );
       console.log(pr_list);
@@ -104,7 +105,46 @@ const PropertyList = () => {
           return row;
         })
       );
+      const property_id = data[rowIndex]["property_id"];
+      const respontse = axios.post(
+        `/${JSON.parse(
+          localStorage.getItem("currentUserIDLocalStorage")
+        )}/${property_id}/${columnId}/${value}`
+      );
+      console.log(respontse);
+      axios.post(
+        `/${JSON.parse(
+          localStorage.getItem("currentUserIDLocalStorage")
+        )}/${property_id}/capRatio/${CAP}`
+      )
     }
+    if (columnId === "note") {
+      // add notes to database
+      // @app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
+      const property_id = data[rowIndex]["property_id"];
+      const respontse = axios.post(
+        `/${JSON.parse(
+          localStorage.getItem("currentUserIDLocalStorage")
+        )}/${property_id}/${columnId}/${value}`
+      );
+      console.log(respontse);
+    }
+    // if (columnId === "rent") {
+    //   // add notes to database
+    //   // @app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
+    //   const property_id = data[rowIndex]["property_id"];
+    //   const respontse = axios.post(
+    //     `/${JSON.parse(
+    //       localStorage.getItem("currentUserIDLocalStorage")
+    //     )}/${property_id}/${columnId}/${value}`
+    //   );
+    //   console.log(respontse);
+    //   axios.post(
+    //     `/${JSON.parse(
+    //       localStorage.getItem("currentUserIDLocalStorage")
+    //     )}/${property_id}/capRatio/${value}`
+    //   );
+    // }
   };
 
   return (
