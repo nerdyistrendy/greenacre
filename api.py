@@ -16,7 +16,7 @@ import logging
 # from marshmallow from Marshmallow
 
 app = Flask(__name__, static_folder='./build', static_url_path='/')
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://lpmmxmxezxaezh:03342c099f64d413aa203968956f57632357c88b94c7330c15b163332d883f5c@ec2-34-230-167-186.compute-1.amazonaws.com:5432/d32kvqgijipm7b"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://jjqyqgpjsskeqn:1e37308e0241cbd475badfd8de13034b427752a0ea552b449fe7a0186ceeeab1@ec2-100-24-139-146.compute-1.amazonaws.com:5432/dfat4ajo25i1tn"
 # "postgresql://postgres:postgres@localhost:5432/greenacre"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 client_id = '682392515702-8073lsudamcf05clhsl95fv6f1r9636i.apps.googleusercontent.com'
@@ -65,6 +65,8 @@ class Investor(UserMixin, db.Model):
     # one-to-many
     investment_lists = db.relationship(
         'InvestmentList', backref='investor', lazy='dynamic')
+    investor_properties = db.relationship(
+        'InvestorProperty', backref='investor', lazy='dynamic')
 
     def __init__(self, id, name, profile_pic):
         self.id = id
@@ -129,24 +131,18 @@ class InvestmentProperty(db.Model):
     def __repr__(self):
         return f"<Investment Property {self.address}>"
 
-        # class User(UserMixin):
-        #     """Simple User class that stores ID, name, and profile image."""
+class InvestorProperty(db.Model):
+    __tablename__ = 'investor_properties'
 
-        #     def __init__(self, ident, name, profile_pic):
-        #         self.id = ident
-        #         self.name = name
-        #         self.profile_pic = profile_pic
+    id = db.Column(db.Integer, primary_key=True)
+    capRatio = db.Column(db.Float)
+    note = db.Column(db.Text)
+    investor_id = db.Column(db.Text, db.ForeignKey('investors.id'))
 
-        #     def update(self, name, profile_pic):
-        #         self.name = name
-        #         self.profile_pic = profile_pic
-
-        # A simple user manager.  A real world application would implement the same
-        # interface but using a database as a backing store.  Note that this
-        # implementation will behave unexpectedly if the user contacts multiple
-        # instances of the application since it is using an in-memory store.
-
-
+    def __init__(self, capRatio, note, investor_id):
+        self.capRatio = capRatio
+        self.note = note
+        self.investor_id = investor_id
 class UserManager(object):
     """Simple user manager class.
     Replace with something that talks to your database instead.
@@ -329,6 +325,8 @@ def get_properties(list_id):
         {
             "address": property.address,
             "price": property.price,
+            "property_type": json.loads(property.details_str)["properties"][0]["prop_type"],
+            "details": json.loads(property.details_str)["meta"]["tracking_params"]["listingBeds"] + "b " + json.loads(property.details_str)["meta"]["tracking_params"]["listingBaths"] + "b, " + json.loads(property.details_str)["meta"]["tracking_params"]["listingSqFt"] + " sqft",
         } for property in properties]
     return {"message": f"{results}"}
 
