@@ -10,6 +10,7 @@ import PropTypes from 'prop-types'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
+import { Link, BrowserRouter as Router, Route } from "react-router-dom";
 
 const useToolbarStyles = makeStyles(theme => ({
   root: {
@@ -47,7 +48,9 @@ const TableToolbar = props => {
         [classes.highlight]: numSelected > 0,
       })}
     >
-      <AddUserDialog addUserHandler={addUserHandler} />
+      {/* <AddUserDialog addUserHandler={addUserHandler} /> */}
+
+        <IconButton>   <Link to="/AutoComplete"><AddUserDialog  /></Link></IconButton>
       {numSelected > 0 ? (
         <Typography
           className={classes.title}
