@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import EnhancedTable from './EnhancedTable'
-import makeData from './makeData'
 import axios from "axios";
 
 const PropertyList = () => {
