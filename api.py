@@ -293,7 +293,7 @@ def get_property_details(property_id) -> json:
         # add property to table investment_properties
         print(property_details_json)
         new_property = InvestmentProperty(
-            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+" "+property_details_json["properties"][0]["address"]["city"], price=property_details_json.meta.tracking_params.listingPrice, details_str=property_details_str)
+            property_id=property_id, address=property_details_json["properties"][0]["address"]["line"]+" "+property_details_json["properties"][0]["address"]["city"], price=property_details_json["meta"]["tracking_params"]["listingPrice"], details_str=property_details_str)
         db.session.add(new_property)
         db.session.commit()
         return property_details_json
