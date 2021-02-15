@@ -337,17 +337,19 @@ def get_properties(list_id):
             "property_id": property.property_id,
             "address": property.address,
             "price": property.price,
+            "listing_status": json.loads(property.details_str)["meta"]["tracking_params"]["ldpPropertyStatus"],
             "property_type": json.loads(property.details_str)["properties"][0]["prop_type"],
             "details": json.loads(property.details_str)["meta"]["tracking_params"]["listingBeds"] + "b " + json.loads(property.details_str)["meta"]["tracking_params"]["listingBaths"] + "b, " + json.loads(property.details_str)["meta"]["tracking_params"]["listingSqFt"] + " sqft",
             "rent": investor_property_info.rent if investor_property_info else 0,
             "capRatio": investor_property_info.capRatio if investor_property_info else 0,
             "note": investor_property_info.note if investor_property_info else "",
+            "monthly_payment": json.loads(property.details_str)["properties"][0]["mortgage"]["estimate"]["monthly_payment"] if json.loads(property.details_str)["meta"]["tracking_params"]["ldpPropertyStatus"] == "ldp:for_sale" else 0,
         })
     return {"message": f"{results}"}
 
 
 # add property to a list
-@app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
+@ app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
 def add_property(investor_id, list_name, property_id):
     property_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
@@ -368,7 +370,7 @@ def add_property(investor_id, list_name, property_id):
 
 
 # add notes to investor_properties
-@app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
+@ app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
 def set_investor_property_info(investor_id, property_id, column, data):
     investor_property = InvestorProperty.query.filter_by(
         investor_id=investor_id, property_id=property_id).first()
@@ -382,19 +384,19 @@ def set_investor_property_info(investor_id, property_id, column, data):
     else:
         if column == "rent":
             investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio=None, note="")
+                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio=0, note="")
         elif column == "capRatio":
             investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=None, capRatio=None, note="")
+                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="")
         elif column == "note":
             investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=None, capRatio=None, note=data)
+                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note=data)
     db.session.add(investor_property)
     db.session.commit()
     return {"message": f"{column} has been added/updated to/in {investor_id}-{property_id}."}
 
 
-@app.errorhandler(404)
+@ app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
 

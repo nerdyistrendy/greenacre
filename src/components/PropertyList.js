@@ -12,7 +12,8 @@ const PropertyList = () => {
     axios.get(`/investor_list/${listId}`).then((response) => {
       const results = response.data["message"];
       console.log(listId);
-      console.log(typeof results);
+      console.log(results);
+
       const p_list = eval(results);
 
       console.log(p_list);
@@ -20,6 +21,7 @@ const PropertyList = () => {
         eval({
           Thumbnail: p.property_type,
           address: p.address,
+          listing_status: p.listing_status,
           type: p.property_type,
           details: p.details,
           price: p.price,
@@ -27,6 +29,7 @@ const PropertyList = () => {
           rent: p.rent,
           capRatio: p.capRatio,
           note: p.note,
+          monthly_payment: p.monthly_payment,
         })
       );
       console.log(pr_list);
@@ -54,6 +57,10 @@ const PropertyList = () => {
         accessor: "type",
       },
       {
+        Header: "Listing Status",
+        accessor: "listing_status",
+      },
+      {
         Header: "Details",
         accessor: "details",
       },
@@ -64,6 +71,14 @@ const PropertyList = () => {
       {
         Header: "Cap Ratio (%)",
         accessor: "capRatio",
+      },
+      {
+        Header: "Monthly Payment",
+        accessor: "monthly_payment",
+      },
+      {
+        Header: "25%-30y-Cap(%)",
+        accessor: "capRatio2530",
       },
       {
         Header: "Note",
@@ -97,12 +112,16 @@ const PropertyList = () => {
     );
     if (columnId === "rent") {
       const CAP = ((value * 12) / data[rowIndex]["price"]) * 100;
+      const CAP2530 =
+        ((value - data[rowIndex]["monthly_payment"]) * 48 * 100) /
+        data[rowIndex]["price"];
       setData((old) =>
         old.map((row, index) => {
           if (index === rowIndex) {
             return {
               ...old[rowIndex],
               capRatio: CAP,
+              capRatio2530: CAP2530,
             };
           }
           return row;
