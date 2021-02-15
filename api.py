@@ -328,14 +328,21 @@ def get_properties(list_id):
     property_list = InvestmentList.query.filter_by(
         id=list_id).first()
     properties = property_list.investment_properties
-    results = [
-        {
+    investor_id = property_list.investor_id
+    results = []
+    for property in properties:
+        investor_property_info = InvestorProperty.query.filter_by(
+            investor_id=investor_id, property_id=property.property_id).first()
+        results.append({
             "property_id": property.property_id,
             "address": property.address,
             "price": property.price,
             "property_type": json.loads(property.details_str)["properties"][0]["prop_type"],
             "details": json.loads(property.details_str)["meta"]["tracking_params"]["listingBeds"] + "b " + json.loads(property.details_str)["meta"]["tracking_params"]["listingBaths"] + "b, " + json.loads(property.details_str)["meta"]["tracking_params"]["listingSqFt"] + " sqft",
-        } for property in properties]
+            "rent": investor_property_info.rent if investor_property_info else 0,
+            "capRatio": investor_property_info.capRatio if investor_property_info else 0,
+            "note": investor_property_info.note if investor_property_info else "",
+        })
     return {"message": f"{results}"}
 
 
@@ -375,7 +382,7 @@ def set_investor_property_info(investor_id, property_id, column, data):
     else:
         if column == "rent":
             investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio="", note="")
+                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio=None, note="")
         elif column == "capRatio":
             investor_property = InvestorProperty(
                 investor_id=investor_id, property_id=property_id, rent=None, capRatio=None, note="")

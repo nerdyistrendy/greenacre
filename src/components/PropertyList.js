@@ -24,6 +24,9 @@ const PropertyList = () => {
           details: p.details,
           price: p.price,
           property_id: p.property_id,
+          rent: p.rent,
+          capRatio: p.capRatio,
+          note: p.note,
         })
       );
       console.log(pr_list);
@@ -116,7 +119,7 @@ const PropertyList = () => {
         `/${JSON.parse(
           localStorage.getItem("currentUserIDLocalStorage")
         )}/${property_id}/capRatio/${CAP}`
-      )
+      );
     }
     if (columnId === "note") {
       // add notes to database
