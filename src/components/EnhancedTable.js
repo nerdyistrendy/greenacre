@@ -32,7 +32,8 @@ const IndeterminateCheckbox = React.forwardRef(
 
     return (
       <>
-        <Checkbox ref={resolvedRef} {...rest} />
+        <Checkbox ref={resolvedRef} {...rest}  style ={{color: "#8bc34a"}}
+/>
       </>
     )
   }

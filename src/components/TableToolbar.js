@@ -24,7 +24,7 @@ const useToolbarStyles = makeStyles(theme => ({
         }
       : {
           color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
+          backgroundColor: "#d0e4b9"
         },
   title: {
     flex: '1 1 100%',
@@ -42,7 +42,7 @@ const TableToolbar = props => {
     globalFilter,
   } = props
   return (
-    <Toolbar
+    <Toolbar 
       className={clsx(classes.root, {
         [classes.highlight]: numSelected > 0,
       })}
@@ -51,14 +51,14 @@ const TableToolbar = props => {
       {numSelected > 0 ? (
         <Typography
           className={classes.title}
-          color="inherit"
+          style={{ background: "#d0e4b9" }}
           variant="subtitle1"
         >
           {numSelected} selected
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Users
+          
         </Typography>
       )}
 
