@@ -29,10 +29,10 @@ const PropertyList = () => {
           price: p.price,
           property_id: p.property_id,
           rent: p.rent,
-          capRatio: p.capRatio.toFixed(2),
+          capRatio: p.capRatio,
           note: p.note,
           monthly_payment: p.monthly_payment,
-          capRatio2530: p.capRatio2530.toFixed(2),
+          capRatio2530: p.capRatio2530,
         })
       );
       // console.log(pr_list);
@@ -114,17 +114,17 @@ const PropertyList = () => {
       })
     );
     if (columnId === "rent") {
-      const CAP = ((value * 12) / data[rowIndex]["price"]) * 100;
+      const CAP = (((value * 12) / data[rowIndex]["price"]) * 100).toFixed(2);
       const CAP2530 =
-        ((value - data[rowIndex]["monthly_payment"]) * 48 * 100) /
-        data[rowIndex]["price"];
+        (((value - data[rowIndex]["monthly_payment"]) * 48 * 100) /
+        data[rowIndex]["price"]).toFixed(2);
       setData((old) =>
         old.map((row, index) => {
           if (index === rowIndex) {
             return {
               ...old[rowIndex],
-              capRatio: CAP.toFixed(2),
-              capRatio2530: CAP2530.toFixed(2),
+              capRatio: CAP,
+              capRatio2530: CAP2530,
             };
           }
           return row;
@@ -142,18 +142,14 @@ const PropertyList = () => {
           localStorage.getItem("currentUserIDLocalStorage")
         )}/${property_id}/capRatio/${CAP}`
       );
-    }
-    if (columnId === "capRatio2530") {
-      // add notes to database
-      // @app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
-      const property_id = data[rowIndex]["property_id"];
-      const respontse = axios.post(
+      axios.post(
         `/${JSON.parse(
           localStorage.getItem("currentUserIDLocalStorage")
-        )}/${property_id}/${columnId}/${value}`
+        )}/${property_id}/capRatio2530/${CAP2530}`
       );
-      console.log(respontse);
     }
+
+    
 
     if (columnId === "note") {
       // add notes to database
