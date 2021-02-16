@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import AddToListForm from "./AddToListForm"
 import CurrencyFormat from 'react-currency-format';
+
+
 import "./Details.css";
 
 const Details = (props) => {
+
   return (
     <div className='container'>
       <ul className='flex-item'>
       <li>
           {props.currentProperty
             ? <img src={props.currentProperty.properties[0].photos[0]["href"]} alt="thumbnail" width = '90%' />
-            : ""}
+            :  ""}
         </li>
         <li>
           {props.currentProperty

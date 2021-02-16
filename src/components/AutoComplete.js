@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PlacesAutocomplete from "react-places-autocomplete";
 import Details from "./Details";
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import "./styles.scss";
 
 import "./AutoComplete.scss";
@@ -8,6 +10,7 @@ export class AutoComplete extends Component {
   constructor(props) {
     super(props);
     this.state = { address: "" };
+    this.state = {propertyLoading: false}
   }
 
   handleChange = (address) => {
@@ -20,6 +23,8 @@ export class AutoComplete extends Component {
     this.props.searchPropertyById(this.state.address);
 
     this.setState({ address: '' });
+    this.setState({ propertyLoading: true});
+
   };
 
   render() {
@@ -69,7 +74,14 @@ export class AutoComplete extends Component {
             </form>
           )}
         </PlacesAutocomplete>
-        <Details 
+        {this.state.propertyLoading && !this.props.currentProperty && <Loader
+            type="Bars"
+            color="#8bc34a"
+            height={50}
+            width={50}
+            className="loader"
+          />}
+         <Details 
           currentProperty={this.props.currentProperty}
           address={this.state.address}
           currentUser={this.props.currentUser}
@@ -77,6 +89,7 @@ export class AutoComplete extends Component {
           addPropertyToList={this.props.addPropertyToList}
           getLists={this.props.getLists} 
         />
+        
       </div>
     );
   }

@@ -276,7 +276,6 @@ class Me(Resource):
         return "", HTTPStatus.NO_CONTENT
 
 
-@login_required
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
