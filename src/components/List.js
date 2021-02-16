@@ -16,8 +16,7 @@ const List = (props) => {
   const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
   console.log(lists)
   const listsLength = lists[0].length
-  const listNames = lists[0]
-  const listIds = lists[1]
+
   const listObjects = []
   for (let i = 0; i < listsLength ; i++) {   
     listObjects.push( {
@@ -27,8 +26,6 @@ const List = (props) => {
       })  
   }
 
-  console.log(listIds)
-  
 
   const columns = React.useMemo(
     () => [

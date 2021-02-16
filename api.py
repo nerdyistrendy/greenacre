@@ -141,13 +141,15 @@ class InvestorProperty(db.Model):
     note = db.Column(db.Text)
     investor_id = db.Column(db.Text, db.ForeignKey('investors.id'))
     property_id = db.Column(db.Text)
+    capRatio2530 = db.Column(db.Float)
 
-    def __init__(self, rent, capRatio, note, investor_id, property_id):
+    def __init__(self, rent, capRatio, note, investor_id, property_id, capRatio2530):
         self.rent = rent
         self.capRatio = capRatio
         self.note = note
         self.investor_id = investor_id
         self.property_id = property_id
+        self.capRatio2530 = capRatio2530
 
 
 class UserManager(object):
@@ -344,6 +346,7 @@ def get_properties(list_id):
             "capRatio": investor_property_info.capRatio if investor_property_info else 0,
             "note": investor_property_info.note if investor_property_info else "",
             "monthly_payment": json.loads(property.details_str)["properties"][0]["mortgage"]["estimate"]["monthly_payment"] if json.loads(property.details_str)["meta"]["tracking_params"]["ldpPropertyStatus"] == "ldp:for_sale" else 0,
+            "capRatio2530": investor_property_info.capRatio2530 if investor_property_info else 0,
         })
     return {"message": f"{results}"}
 
@@ -401,16 +404,22 @@ def set_investor_property_info(investor_id, property_id, column, data):
             investor_property.capRatio = float(data)
         elif column == "note":
             investor_property.note = data
+        elif column == "capRatio2530":
+            investor_property.capRatio2530 = data
     else:
         if column == "rent":
             investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio=0, note="")
+                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio=0, note="", capRatio2530=0 )
         elif column == "capRatio":
             investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="")
+                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="", capRatio2530=0)
         elif column == "note":
             investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note=data)
+                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note=data, capRatio2530=0)
+        elif column == "capRatio2530":
+            investor_property = InvestorProperty(
+                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="", capRatio2530=data)
+        
     db.session.add(investor_property)
     db.session.commit()
     return {"message": f"{column} has been added/updated to/in {investor_id}-{property_id}."}

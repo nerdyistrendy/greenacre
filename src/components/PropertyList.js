@@ -13,15 +13,15 @@ const PropertyList = () => {
   useEffect(() => {
     axios.get(`/investor_list/${listId}`).then((response) => {
       const results = response.data["message"];
-      console.log(listId);
-      console.log(results);
+      // console.log(listId);
+      // console.log(results);
 
       const p_list = eval(results);
 
       console.log(p_list);
       const pr_list = p_list.map((p) =>
         eval({
-          Thumbnail: p.property_type,
+          thumbnail: p.property_type,
           address: p.address,
           listing_status: p.listing_status,
           type: p.property_type,
@@ -32,9 +32,10 @@ const PropertyList = () => {
           capRatio: p.capRatio,
           note: p.note,
           monthly_payment: p.monthly_payment,
+          capRatio2530: p.capRatio2530,
         })
       );
-      console.log(pr_list);
+      // console.log(pr_list);
       setData(pr_list);
       setIsLoaded(true);
     });
@@ -142,6 +143,18 @@ const PropertyList = () => {
         )}/${property_id}/capRatio/${CAP}`
       );
     }
+    if (columnId === "capRatio2530") {
+      // add notes to database
+      // @app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
+      const property_id = data[rowIndex]["property_id"];
+      const respontse = axios.post(
+        `/${JSON.parse(
+          localStorage.getItem("currentUserIDLocalStorage")
+        )}/${property_id}/${columnId}/${value}`
+      );
+      console.log(respontse);
+    }
+
     if (columnId === "note") {
       // add notes to database
       // @app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
@@ -153,6 +166,7 @@ const PropertyList = () => {
       );
       console.log(respontse);
     }
+
 
   };
 
