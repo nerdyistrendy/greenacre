@@ -112,6 +112,7 @@ const EnhancedTableList = ({
   setData,
   updateMyData,
   skipPageReset,
+  getLists,
 }) => {
   const {
     getTableProps,
@@ -188,7 +189,11 @@ const EnhancedTableList = ({
         `/delete/${JSON.parse(
           localStorage.getItem("currentUserIDLocalStorage")
         )}/${data[x]["listName"]}`
-      )
+      )    
+      .then(function (response) {
+        getLists();    
+      })
+      
     );
 
     const newData = removeByIndexs(
@@ -213,6 +218,7 @@ const EnhancedTableList = ({
         preGlobalFilteredRows={preGlobalFilteredRows}
         setGlobalFilter={setGlobalFilter}
         globalFilter={globalFilter}
+        getLists={getLists}
       />
       <MaUTable {...getTableProps()}>
         <TableHead>

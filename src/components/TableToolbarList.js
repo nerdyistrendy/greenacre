@@ -32,7 +32,7 @@ const useToolbarStyles = makeStyles(theme => ({
   },
 }))
 
-const TableToolbar = props => {
+const TableToolbarList = props => {
   const classes = useToolbarStyles()
   const {
     numSelected,
@@ -49,7 +49,7 @@ const TableToolbar = props => {
       })}
     >
       <h3> Lists </h3>
-      <AddUserDialog addUserHandler={addUserHandler} />
+      <AddUserDialog addUserHandler={addUserHandler} getLists={props.getLists}/>
       {numSelected > 0 ? (
         <Typography
           className={classes.title}
@@ -81,7 +81,7 @@ const TableToolbar = props => {
   )
 }
 
-TableToolbar.propTypes = {
+TableToolbarList.propTypes = {
   numSelected: PropTypes.number.isRequired,
   addUserHandler: PropTypes.func.isRequired,
   deleteUserHandler: PropTypes.func.isRequired,
@@ -90,4 +90,4 @@ TableToolbar.propTypes = {
   globalFilter: PropTypes.string.isRequired,
 }
 
-export default TableToolbar
+export default TableToolbarList

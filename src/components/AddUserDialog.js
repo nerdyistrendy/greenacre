@@ -49,13 +49,17 @@ const AddUserDialog = (props) => {
   const handleAdd = (event) => {
     addUserHandler(user);
     setUser(initialUser);
-    // switchState.addMultiple ? setOpen(true) : setOpen(false);
+    switchState.addMultiple ? setOpen(true) : setOpen(false);
     // add list to investment_lists
     axios.post(
       `/create/${JSON.parse(
         localStorage.getItem("currentUserIDLocalStorage")
       )}/${user.listName}`
-    );
+    )
+    .then(function (response) {
+      props.getLists();    
+    })
+
   };
 
   const handleChange = (name) => ({ target: { value } }) => {

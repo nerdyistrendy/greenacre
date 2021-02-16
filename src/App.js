@@ -258,7 +258,7 @@ const App = () => {
                   <PropertyList />
                 </ProtectedRoute>
                 <ProtectedRoute authRequired={authRequired} path="/list">
-                  <List />
+                  <List getLists={getLists}/>
                 </ProtectedRoute>
                 <Route path="/details">
                   <Details currentProperty={currentProperty} />

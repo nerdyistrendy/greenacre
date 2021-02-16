@@ -70,6 +70,7 @@ const List = (props) => {
         setData={setData}
         updateMyData={updateMyData}
         skipPageReset={skipPageReset}
+        getLists={props.getLists}
       />
     </div>
   )
