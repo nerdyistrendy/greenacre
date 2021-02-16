@@ -5,7 +5,8 @@ import {
   Switch,
   Route,
   Link,
-} from "react-router-dom";import { makeStyles } from '@material-ui/core/styles';
+} from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import EnhancedTableList from "./EnhancedTableList";
 import axios from "axios";
@@ -20,8 +21,9 @@ const List = (props) => {
   const listObjects = []
   for (let i = 0; i < listsLength ; i++) {   
     listObjects.push( {
-      listName: <Link to='/investor_list/${lists[1][i]}'> lists[0][i] </Link>
-        // listId:lists[1][i]
+      listName: lists[0][i],
+      listId:lists[1][i],
+      // action: "Delete"
       })  
   }
 
@@ -34,10 +36,10 @@ const List = (props) => {
         Header: 'List Name',
         accessor: 'listName',
       },
-      {
-        Header: 'Action',
-        accessor: 'action',
-      },
+      // {
+      //   Header: 'Action',
+      //   accessor: 'action',
+      // },
     ],
     []
   )

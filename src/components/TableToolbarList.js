@@ -48,9 +48,8 @@ const TableToolbar = props => {
         [classes.highlight]: numSelected > 0,
       })}
     >
+      <h3> Lists </h3>
       <AddUserDialog addUserHandler={addUserHandler} />
-
-        <IconButton>   <Link to="/AutoComplete"><AddUserDialog  /></Link></IconButton>
       {numSelected > 0 ? (
         <Typography
           className={classes.title}

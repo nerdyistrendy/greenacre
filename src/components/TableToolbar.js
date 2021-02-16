@@ -49,6 +49,7 @@ const TableToolbar = props => {
       })}
     >
       {/* <AddUserDialog addUserHandler={addUserHandler} /> */}
+      <h3> Properties </h3>
 
         <IconButton>   <Link to="/AutoComplete"><AddUserDialog  /></Link></IconButton>
       {numSelected > 0 ? (

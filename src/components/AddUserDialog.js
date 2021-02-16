@@ -14,12 +14,7 @@ import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
 
 const initialUser = {
-  firstName: '',
-  lastName: '',
-  age: 0,
-  visits: 0,
-  status: 'single',
-  progress: 0,
+  listName: '',
   subRows: undefined,
 }
 
@@ -71,58 +66,19 @@ const AddUserDialog = props => {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add User</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add List</DialogTitle>
         <DialogContent>
-          <DialogContentText>Demo add item to react table.</DialogContentText>
+          {/* <DialogContentText>Demo add item to react table.</DialogContentText> */}
           <TextField
             autoFocus
             margin="dense"
-            label="First Name"
+            label="List Name"
             type="text"
             fullWidth
-            value={user.firstName}
-            onChange={handleChange('firstName')}
+            value={user.listName}
+            onChange={handleChange('listName')}
           />
-          <TextField
-            margin="dense"
-            label="Last Name"
-            type="text"
-            fullWidth
-            value={user.lastName}
-            onChange={handleChange('lastName')}
-          />
-          <TextField
-            margin="dense"
-            label="Age"
-            type="number"
-            fullWidth
-            value={user.age}
-            onChange={handleChange('age')}
-          />
-          <TextField
-            margin="dense"
-            label="Visits"
-            type="number"
-            fullWidth
-            value={user.visits}
-            onChange={handleChange('visits')}
-          />
-          <TextField
-            margin="dense"
-            label="Status"
-            type="text"
-            fullWidth
-            value={user.status}
-            onChange={handleChange('status')}
-          />
-          <TextField
-            margin="dense"
-            label="Profile Progress"
-            type="number"
-            fullWidth
-            value={user.progress}
-            onChange={handleChange('progress')}
-          />
+
         </DialogContent>
         <DialogActions>
           <Tooltip title="Add multiple">

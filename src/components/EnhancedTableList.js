@@ -14,12 +14,20 @@ import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import TableToolbarList from './TableToolbarList'
 import {
+  BrowserRouter as Router,
+  HashRouter,
+  Switch,
+  Route,
+  Link,
+} from "react-router-dom";
+import {
   useGlobalFilter,
   usePagination,
   useRowSelect,
   useSortBy,
   useTable,
 } from 'react-table'
+import PropertyList from './PropertyList'
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -95,7 +103,7 @@ EditableCell.propTypes = {
 
 // Set our editable cell renderer as the default Cell renderer
 const defaultColumn = {
-  Cell: EditableCell,
+  // Cell: EditableCell,
 }
 
 const EnhancedTableList = ({
@@ -226,8 +234,9 @@ const EnhancedTableList = ({
               <TableRow {...row.getRowProps()}>
                 {row.cells.map(cell => {
                   return (
+                    
                     <TableCell {...cell.getCellProps()}>
-                      {cell.render('Cell')}
+                      <Link to={`/list/${cell.row.original.listId}`}>{cell.render('Cell')}</Link>
                     </TableCell>
                   )
                 })}
@@ -236,7 +245,7 @@ const EnhancedTableList = ({
           })}
         </TableBody>
 
-        <TableFooter>
+        {/* <TableFooter>
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[
@@ -258,7 +267,7 @@ const EnhancedTableList = ({
               ActionsComponent={TablePaginationActions}
             />
           </TableRow>
-        </TableFooter>
+        </TableFooter> */}
       </MaUTable>
     </TableContainer>
   )
