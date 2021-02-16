@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import AddToListForm from "./AddToListForm"
 import axios from "axios";
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import SearchIcon from '@material-ui/icons/Search';
+import {
+  BrowserRouter as Router,
+  HashRouter,
+  Switch,
+  Route,
+  Link,
+} from "react-router-dom";
+import "./Hello.css";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -47,11 +56,12 @@ export function Hello(props) {
   if (name && sub)
     return (
       <div className={classes.content}>
-        <Typography variant="h4">Hello, {name}</Typography>
-        <Typography variant="body1">
-          Click your profile picture to log out.
-        </Typography>
+        <p className="welcome">Welcome, {name}</p>
         <Typography variant="body1">Google subscriber ID: {sub}.</Typography>
+        <section className="icons">
+        <p><Link to="/list" ><ListAltIcon style={{ fontSize: 50 }}/></Link></p>
+        <p><Link to="/Autocomplete" ><SearchIcon style={{ fontSize: 50 }}/></Link></p>
+        </section>
       </div>
     );
   else

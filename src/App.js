@@ -203,8 +203,8 @@ const App = () => {
               >
                 <Link to="/"><HomeIcon fontSize='large' color="action"/></Link> Greenacre Hub
               </Typography>
-              <ProfileButton
-                handleLogout={handleLogout}
+              <ProfileButton 
+                handleLogout={handleLogout}               
                 authenticated={!authRequired}
                 profilePicture={profilePicture}
               />
@@ -307,7 +307,7 @@ const App = () => {
       <h2>The Components way</h2>
       <Login />
       <br />
-      <Logout />
+      
 
     </div> */}
     </div>

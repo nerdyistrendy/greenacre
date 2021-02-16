@@ -3,7 +3,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 const useStyles = makeStyles(theme => ({
     smallAvatar: {
         width: theme.spacing(3),
@@ -19,7 +19,7 @@ export function ProfileButton(props) {
         return (
             props.profilePicture ? (
                 <IconButton onClick={props.handleLogout} id="ib">
-                    <Avatar src={props.profilePicture} className={classes.smallAvatar} />
+                    <ExitToAppIcon src={props.profilePicture} fontSize = "large"/>
                 </IconButton>
             ) : (
                 <Button onClick={props.handleLogout} color="inherit">

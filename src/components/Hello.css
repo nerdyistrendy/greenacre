@@ -1,0 +1,23 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Cookie&display=swap');
+
+.welcome {
+  font-family: 'Cookie', cursive;
+  font-weight: 400;
+  font-size: 70px;
+}
+.icons a:visited {
+  color: #8bc34a;
+}
+
+.icons a:link {
+  color: #8bc34a;
+}
+
+.icons a:hover {
+  color: #356300;
+}
+.icons {
+  margin-top: 50px;
+  color: #8bc34a;
+}
