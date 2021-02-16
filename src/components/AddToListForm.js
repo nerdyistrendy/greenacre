@@ -14,7 +14,7 @@ const Field = ({ label, id, ...rest }) => (
 const AddToListForm = (props) => {
   const { form } = useForm({
     defaultValues: { list: "favorite" },
-    onSubmit: (values) => props.addPropertyToList(props.currentUser, values.list, props.currentProperty)
+    onSubmit: (values) => props.addPropertyToList(props.currentUser, values.list, props.currentProperty, props.address)
     
 
     // onSubmit: (values) =>

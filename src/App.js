@@ -155,12 +155,14 @@ const App = () => {
     });
   };
 
-  const addPropertyToList = (currentUser, currentList, currentProperty) => { 
+  const addPropertyToList = (currentUser, currentList, currentProperty, currentAddress) => { 
     axios.post(`${API_URL_BASE}${currentUser.google_id}/${currentList}/${currentProperty.meta.tracking_params.mprId}`)
     console.log(currentUser)
     console.log(currentList)
     console.log(currentProperty)
     alert('Property added!')
+    setCurrentProperty(null)
+
     // .then((response) => {
     //   console.log(response);
     //   return(response)
@@ -174,9 +176,6 @@ const App = () => {
     // });
     }
   
-  const deleteListCallback =() => {
-    return "TODO"
-  }
 
   // const getProperties =() => {
   //   axios.get(`${API_URL_BASE}details/${response}`)
@@ -257,7 +256,7 @@ const App = () => {
                   <PropertyList />
                 </Route>
                 <Route path="/list">
-                  <List deleteListCallback={deleteListCallback}/>
+                  <List />
                 </Route>
                 <Route path="/details">
                   <Details currentProperty={currentProperty} />

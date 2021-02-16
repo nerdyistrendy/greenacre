@@ -19,7 +19,7 @@ export class AutoComplete extends Component {
     // this.props.getPropertyId(this.state.address)
     this.props.searchPropertyById(this.state.address);
 
-    // this.setState({ address: '' });
+    this.setState({ address: '' });
   };
 
   render() {

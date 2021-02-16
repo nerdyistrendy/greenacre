@@ -14,7 +14,7 @@ import "./List.scss";
 
 const List = (props) => {
   const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
-  console.log(lists)
+  // console.log(lists)
   const listsLength = lists[0].length
 
   const listObjects = []
