@@ -240,7 +240,11 @@ const EnhancedTable = ({
                 {row.cells.map((cell) => {
                   return (
                     <TableCell {...cell.getCellProps()}>
-                      {cell.render("Cell")}
+                      {cell.column.id === "thumbnail" ? (
+                          <img src={cell.value} alt="thumbnail" width = '140%' />                          
+                      ) : (
+                        cell.render("Cell")
+                      )}
                     </TableCell>
                   );
                 })}

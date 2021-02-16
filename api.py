@@ -339,7 +339,7 @@ def get_properties(list_id):
             "property_id": property.property_id,
             "address": property.address,
             "price": property.price,
-            "listing_status": json.loads(property.details_str)["meta"]["tracking_params"]["ldpPropertyStatus"],
+            "listing_status": json.loads(property.details_str)["meta"]["tracking_params"]["listingActivity"],
             "property_type": json.loads(property.details_str)["properties"][0]["prop_type"],
             "details": json.loads(property.details_str)["meta"]["tracking_params"]["listingBeds"] + "b " + json.loads(property.details_str)["meta"]["tracking_params"]["listingBaths"] + "b, " + json.loads(property.details_str)["meta"]["tracking_params"]["listingSqFt"] + " sqft",
             "rent": investor_property_info.rent if investor_property_info else 0,
@@ -347,6 +347,7 @@ def get_properties(list_id):
             "note": investor_property_info.note if investor_property_info else "",
             "monthly_payment": json.loads(property.details_str)["properties"][0]["mortgage"]["estimate"]["monthly_payment"] if json.loads(property.details_str)["meta"]["tracking_params"]["ldpPropertyStatus"] == "ldp:for_sale" else 0,
             "capRatio2530": investor_property_info.capRatio2530 if investor_property_info else 0,
+            "thumbnail": json.loads(property.details_str)["properties"][0]["photos"][0]["href"],
         })
     return {"message": f"{results}"}
 

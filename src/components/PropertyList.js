@@ -18,10 +18,10 @@ const PropertyList = () => {
 
       const p_list = eval(results);
 
-      console.log(p_list);
+      // console.log(p_list);
       const pr_list = p_list.map((p) =>
         eval({
-          thumbnail: p.property_type,
+          thumbnail: p.thumbnail,
           address: p.address,
           listing_status: p.listing_status,
           type: p.property_type,
@@ -29,10 +29,10 @@ const PropertyList = () => {
           price: p.price,
           property_id: p.property_id,
           rent: p.rent,
-          capRatio: p.capRatio,
+          capRatio: p.capRatio.toFixed(2),
           note: p.note,
           monthly_payment: p.monthly_payment,
-          capRatio2530: p.capRatio2530,
+          capRatio2530: p.capRatio2530.toFixed(2),
         })
       );
       // console.log(pr_list);
@@ -45,7 +45,7 @@ const PropertyList = () => {
     () => [
       {
         Header: "Thumbnail",
-        accessor: "Thumbnail",
+        accessor: "thumbnail",
       },
       {
         Header: "Address",
