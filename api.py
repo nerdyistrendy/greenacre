@@ -348,6 +348,26 @@ def get_properties(list_id):
     return {"message": f"{results}"}
 
 
+# create a new list in investment_lists
+@ app.route("/create/<investor_id>/<list_name>", methods=['POST'])
+def add_investment_list(investor_id, list_name):
+    new_investment_list = InvestmentList(
+        list_name=list_name, investor_id=investor_id)
+    db.session.add(new_investment_list)
+    db.session.commit()
+    return {"message": f"{list_name} has been added to investment_lists."}
+
+
+# delete a list in investment_lists
+@ app.route("/delete/<investor_id>/<list_name>", methods=['POST'])
+def delete_investment_list(investor_id, list_name):
+    investment_list = InvestmentList.query.filter_by(
+        list_name=list_name, investor_id=investor_id).first()
+    db.session.delete(investment_list)
+    db.session.commit()
+    return {"message": f"{list_name} has been removed from investment_lists."}
+
+
 # add property to a list
 @ app.route("/<investor_id>/<list_name>/<property_id>", methods=['POST'])
 def add_property(investor_id, list_name, property_id):
