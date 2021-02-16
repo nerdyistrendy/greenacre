@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import {
   BrowserRouter as Router,
   HashRouter,
@@ -6,109 +6,79 @@ import {
   Route,
   Link,
 } from "react-router-dom";import { makeStyles } from '@material-ui/core/styles';
-import PropertyList from './PropertyList';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Editable from 'react-editable-title'
+import CssBaseline from "@material-ui/core/CssBaseline";
+import EnhancedTableList from "./EnhancedTableList";
+import axios from "axios";
 import "./List.scss";
-
-const useStyles = makeStyles((theme) => ({
-  margin: {
-    margin: theme.spacing(1),
-  },
-  extendedIcon: {
-    marginRight: theme.spacing(1),
-  },
-  table: {
-    minWidth: 650,
-  },
-}));
-
-function createData(name, action) {
-  return { name, action };
-}
-
 
 const List = (props) => {
   const lists = JSON.parse(localStorage.getItem('currentListsLocalStorage')||[])
+  console.log(lists)
+  const listsLength = lists[0].length
+  const listNames = lists[0]
+  const listIds = lists[1]
+  const listObjects = []
+  for (let i = 0; i < listsLength ; i++) {   
+    listObjects.push( {
+      listName: <Link to='/investor_list/${lists[1][i]}'> lists[0][i] </Link>
+        // listId:lists[1][i]
+      })  
+  }
 
-  const classes = useStyles();
-  const [text, setText] = useState(lists[0]);
-  const [focused, setFocused] = useState(false);
+  console.log(listIds)
+  
 
-  const rows = lists[0].map(function (list) {
-  return (createData(list, "actions"))
-})
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'List Name',
+        accessor: 'listName',
+      },
+      {
+        Header: 'Action',
+        accessor: 'action',
+      },
+    ],
+    []
+  )
+  
 
-const listIds = lists[1]
-console.log(listIds)
+  const [data, setData] = React.useState(React.useMemo(() => listObjects, []))
+  const [skipPageReset, setSkipPageReset] = React.useState(false)
 
-  const handleEditCancel = () => {
-    console.log("First editable title`s edit has been canceled");
-  };
+  // We need to keep the table from resetting the pageIndex when we
+  // Update data. So we can keep track of that flag with a ref.
 
-  const handleTextUpdate = current => {
-    setText(current);
-  };
+  // When our cell renderer calls updateMyData, we'll use
+  // the rowIndex, columnId and new value to update the
+  // original data
+  const updateMyData = (rowIndex, columnId, value) => {
+    // We also turn on the flag to not reset the page
+    setSkipPageReset(true)
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          }
+        }
+        return row
+      })
+    )
+  }
 
   return (
-    <React.Fragment>
     <div>
-
-      <h1> My Lists</h1>
-      <TableContainer component={Paper} className="table">
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center"><strong>List Name</strong></TableCell>
-            <TableCell align="center"><strong>Actions</strong></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row,index) => (
-            <TableRow key={index} >
-              <TableCell component="th" scope="row" align="center" >   
-                  {/* TODO   edit and delete       */}
-                  <Link to={`/list/${listIds[index]}`}>{text[index]}</Link>
-                  {/* <PropertyList listId = {listIds[index]}/> */}
-                <Editable      
-                  //  text={text[index]}                   
-                  saveOnBlur={false}
-                  editButton
-                  editControlButtons
-                  placeholder="Type here"
-                  cb={handleTextUpdate}
-                  onEditCancel={handleEditCancel}
-                  isFocused={focused}
-                 />  
-              </TableCell>
-              <TableCell align="center">
-                  <IconButton aria-label="delete"> <DeleteIcon onClick={() => props.deleteListCallback(props.list_id)} />
-          </IconButton>
-          </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-
-      <div className="fab">
-      <Fab  aria-label="add" >
-        <AddIcon />
-      </Fab>  
-      </div>
+      <CssBaseline />
+      <EnhancedTableList
+        columns={columns}
+        data={data}
+        setData={setData}
+        updateMyData={updateMyData}
+        skipPageReset={skipPageReset}
+      />
     </div>
-    
-    </React.Fragment>
   )
 }
 
