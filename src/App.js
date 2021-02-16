@@ -35,9 +35,7 @@ import AutoComplete from "./components/AutoComplete";
 import Details from "./components/Details";
 import PropertyList from './components/PropertyList';
 import HomeIcon from '@material-ui/icons/Home';
-import Logout from "./components/Logout";
-import LoginHooks from "./components/LoginHooks";
-import LogoutHooks from "./components/LogoutHooks";
+
 import { createMuiTheme } from "@material-ui/core/styles";
 
 import "./App.css";

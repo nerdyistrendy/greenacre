@@ -113,7 +113,7 @@ const AddUserDialog = (props) => {
 };
 
 AddUserDialog.propTypes = {
-  addUserHandler: PropTypes.func.isRequired,
+  // addUserHandler: PropTypes.func.isRequired,
 };
 
 export default AddUserDialog;
