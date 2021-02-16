@@ -181,12 +181,13 @@ const EnhancedTableList = ({
     array.filter((_, i) => !indexs.includes(i));
 
   const deleteUserHandler = (event) => {
-    // "/delete/<investor_id>/<list_name>/<property_id>"
+    // delete a list in investment_lists
+    // "/delete/<investor_id>/<list_name>"
     Object.keys(selectedRowIds).map((x) =>
       axios.post(
         `/delete/${JSON.parse(
           localStorage.getItem("currentUserIDLocalStorage")
-        )}/${data[x]["property_id"]}`
+        )}/${data[x]["listName"]}`
       )
     );
 

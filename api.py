@@ -367,6 +367,8 @@ def add_investment_list(investor_id, list_name):
 def delete_investment_list(investor_id, list_name):
     investment_list = InvestmentList.query.filter_by(
         list_name=list_name, investor_id=investor_id).first()
+    app.logger.info(list_name)
+    app.logger.info(investment_list)
     db.session.delete(investment_list)
     db.session.commit()
     return {"message": f"{list_name} has been removed from investment_lists."}
