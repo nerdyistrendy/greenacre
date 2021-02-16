@@ -131,22 +131,23 @@ const PropertyList = () => {
         })
       );
       const property_id = data[rowIndex]["property_id"];
-      const respontse = axios.post(
+      axios.post(
         `/${JSON.parse(
           localStorage.getItem("currentUserIDLocalStorage")
         )}/${property_id}/${columnId}/${value}`
-      );
-      console.log(respontse);
-      axios.post(
+      )
+      .then(response => {
+        return axios.post(
         `/${JSON.parse(
           localStorage.getItem("currentUserIDLocalStorage")
-        )}/${property_id}/capRatio/${CAP}`
-      );
-      axios.post(
+        )}/${property_id}/capRatio/${CAP}`)
+        })
+        .then(response => {
+        return axios.post(
         `/${JSON.parse(
           localStorage.getItem("currentUserIDLocalStorage")
-        )}/${property_id}/capRatio2530/${CAP2530}`
-      );
+        )}/${property_id}/capRatio2530/${CAP2530}`)
+        })
     }
 
     

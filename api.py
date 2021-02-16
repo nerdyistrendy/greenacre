@@ -425,15 +425,15 @@ def set_investor_property_info(investor_id, property_id, column, data):
         if column == "rent":
             investor_property = InvestorProperty(
                 investor_id=investor_id, property_id=property_id, rent=int(data), capRatio=0, note="", capRatio2530=0)
-        elif column == "capRatio":
-            investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="", capRatio2530=0)
+        # elif column == "capRatio":
+        #     investor_property = InvestorProperty(
+        #         investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="", capRatio2530=0)
         elif column == "note":
             investor_property = InvestorProperty(
                 investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note=data, capRatio2530=0)
-        elif column == "capRatio2530":
-            investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="", capRatio2530=data)
+        # elif column == "capRatio2530":
+        #     investor_property = InvestorProperty(
+        #         investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="", capRatio2530=data)
 
     db.session.add(investor_property)
     db.session.commit()
