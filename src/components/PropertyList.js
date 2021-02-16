@@ -166,8 +166,6 @@ const PropertyList = () => {
       );
       console.log(respontse);
     }
-
-
   };
 
   return (
@@ -180,6 +178,7 @@ const PropertyList = () => {
           setData={setData}
           updateMyData={updateMyData}
           skipPageReset={skipPageReset}
+          listId={listId}
         />
       ) : (
         "Loading"

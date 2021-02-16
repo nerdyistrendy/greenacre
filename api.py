@@ -392,6 +392,18 @@ def add_property(investor_id, list_name, property_id):
         return {"message": f"{property_id} has been added to {list_name}."}
 
 
+# delete a property from a list
+@ app.route("/delete/<investor_id>/<list_id>/<property_id>", methods=['POST'])
+def delete_property_from_list(investor_id, list_id, property_id):
+    property = InvestmentProperty.query.filter_by(
+        property_id=property_id).first()
+    investment_list = InvestmentList.query.filter_by(id=list_id).first()
+    # delete association of investment_list and property
+    investment_list.investment_properties.remove(property)
+    db.session.commit()
+    return {"message": f"{property_id} has been removed from investment_lists: {list_id}."}
+
+
 # add notes to investor_properties
 @ app.route("/<investor_id>/<property_id>/<column>/<data>", methods=['POST'])
 def set_investor_property_info(investor_id, property_id, column, data):
@@ -409,7 +421,7 @@ def set_investor_property_info(investor_id, property_id, column, data):
     else:
         if column == "rent":
             investor_property = InvestorProperty(
-                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio=0, note="", capRatio2530=0 )
+                investor_id=investor_id, property_id=property_id, rent=int(data), capRatio=0, note="", capRatio2530=0)
         elif column == "capRatio":
             investor_property = InvestorProperty(
                 investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="", capRatio2530=0)
@@ -419,7 +431,7 @@ def set_investor_property_info(investor_id, property_id, column, data):
         elif column == "capRatio2530":
             investor_property = InvestorProperty(
                 investor_id=investor_id, property_id=property_id, rent=0, capRatio=0, note="", capRatio2530=data)
-        
+
     db.session.add(investor_property)
     db.session.commit()
     return {"message": f"{column} has been added/updated to/in {investor_id}-{property_id}."}
