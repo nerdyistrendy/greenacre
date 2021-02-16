@@ -6,6 +6,7 @@ import {
   Switch,
   Route,
   Link,
+  
 } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 /* Material UI imports */
@@ -90,6 +91,7 @@ const App = () => {
         const result = await axios.delete(`${API_URL_BASE}me`);
         if (result.status === 200 || result.status === 204) {
           setAuthRequired(true);
+
         }
       } catch (e) {
         showLogoutError(true);
@@ -252,12 +254,12 @@ const App = () => {
                     currentProperty={currentProperty}
                   />
                 </Route>
-                <Route path="/list/:listId" component={PropertyList}>
+                <ProtectedRoute authRequired={authRequired} path="/list/:listId" component={PropertyList}>
                   <PropertyList />
-                </Route>
-                <Route path="/list">
+                </ProtectedRoute>
+                <ProtectedRoute authRequired={authRequired} path="/list">
                   <List />
-                </Route>
+                </ProtectedRoute>
                 <Route path="/details">
                   <Details currentProperty={currentProperty} />
                 </Route>
