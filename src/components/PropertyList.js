@@ -123,8 +123,8 @@ const PropertyList = () => {
           if (index === rowIndex) {
             return {
               ...old[rowIndex],
-              capRatio: CAP,
-              capRatio2530: CAP2530,
+              capRatio: CAP.toFixed(2),
+              capRatio2530: CAP2530.toFixed(2),
             };
           }
           return row;
