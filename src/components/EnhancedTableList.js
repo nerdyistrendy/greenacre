@@ -233,10 +233,12 @@ const EnhancedTableList = ({
             return (
               <TableRow {...row.getRowProps()}>
                 {row.cells.map(cell => {
+                  console.log(cell)
                   return (
                     
                     <TableCell {...cell.getCellProps()}>
-                      <Link to={`/list/${cell.row.original.listId}`}>{cell.render('Cell')}</Link>
+
+                    {cell.column.id !== 'selection' ? <Link to={`/list/${cell.row.original.listId}`}>{cell.render('Cell')}</Link> : cell.render('Cell')}
                     </TableCell>
                   )
                 })}
