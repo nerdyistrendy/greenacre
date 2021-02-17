@@ -84,6 +84,7 @@ export class AutoComplete extends Component {
             className="loader"
           />}
          <Details 
+          propertyLoading={this.props.propertyLoading}
           currentProperty={this.props.currentProperty}
           address={this.state.address}
           currentUser={this.props.currentUser}
