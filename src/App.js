@@ -65,7 +65,7 @@ const App = () => {
   const [currentProperty, setCurrentProperty] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUserLists, setCurrentUserLists] = useState([]);
-
+  const [propertyLoading, setPropertyLoading] = useState(false);
   const classes = useStyles();
 
   /* Is authentication required? */
@@ -134,6 +134,7 @@ const App = () => {
         axios.get(`${API_URL_BASE}details/${response}`).then((response) => {
           const results = response.data;
           setCurrentProperty(results);
+          setPropertyLoading(false)
           console.log(results);
         });
       })
@@ -269,7 +270,8 @@ const App = () => {
                     currentUser={currentUser}
                     getLists={getLists}
                     currentUserLists={currentUserLists}
-                    addPropertyToList={addPropertyToList} 
+                    addPropertyToList={addPropertyToList}
+                    propertyLoading={propertyLoading} 
                   />
                 </Route>
                 <Route path="/login">

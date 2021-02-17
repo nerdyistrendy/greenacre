@@ -15,6 +15,8 @@ export class AutoComplete extends Component {
 
   handleChange = (address) => {
     this.setState({ address });
+    this.setState({ propertyLoading: false});
+
   };
 
   onFormSubmit = (event) => {
@@ -24,8 +26,8 @@ export class AutoComplete extends Component {
 
     this.setState({ address: '' });
     this.setState({ propertyLoading: true});
-
   };
+  
 
   render() {
     return (

@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import EnhancedTable from "./EnhancedTable";
 import EnhancedTableList from "./EnhancedTable";
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import axios from "axios";
 
@@ -178,7 +180,13 @@ const PropertyList = () => {
           listId={listId}
         />
       ) : (
-        "Loading"
+        <Loader
+            type="Bars"
+            color="#8bc34a"
+            height={50}
+            width={50}
+            className="loader"
+          />
       )}
     </div>
   );
