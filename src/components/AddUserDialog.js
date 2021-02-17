@@ -112,7 +112,6 @@ const AddUserDialog = (props) => {
   );
 };
 
-
 AddUserDialog.propTypes = {
   // addUserHandler: PropTypes.func.isRequired,
 };
